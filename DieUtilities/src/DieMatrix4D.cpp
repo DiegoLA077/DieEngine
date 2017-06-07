@@ -118,16 +118,38 @@ namespace dieEngineSDK {
       (fMatrix[0][2] * fMa.fMatrix[2][3]);
 
 
-    Result.fMatrix[1][0] = (fMatrix[1][0] * fMa.fMatrix[0][0]) + (fMatrix[1][1] + fMa.fMatrix[1][0]) + (fMatrix[1][2] * fMa.fMatrix[2][0]);
-    Result.fMatrix[1][1] = (fMatrix[1][0] * fMa.fMatrix[0][1]) + (fMatrix[1][1] * fMa.fMatrix[1][1]) + (fMatrix[1][2] * fMa.fMatrix[2][1]);
-    Result.fMatrix[1][2] = (fMatrix[1][0] * fMa.fMatrix[0][2]) + (fMatrix[1][1] * fMa.fMatrix[1][2]) + (fMatrix[1][2] * fMa.fMatrix[2][2]);
-    Result.fMatrix[1][3] = (fMatrix[1][0] * fMa.fMatrix[0][3]) + (fMatrix[1][1] * fMa.fMatrix[1][3]) + (fMatrix[1][2] * fMa.fMatrix[2][3]);
+    Result.fMatrix[1][0] = (fMatrix[1][0] * fMa.fMatrix[0][0]) + 
+                           (fMatrix[1][1] + fMa.fMatrix[1][0]) + 
+                           (fMatrix[1][2] * fMa.fMatrix[2][0]);
+
+    Result.fMatrix[1][1] = (fMatrix[1][0] * fMa.fMatrix[0][1]) + 
+                           (fMatrix[1][1] * fMa.fMatrix[1][1]) + 
+                           (fMatrix[1][2] * fMa.fMatrix[2][1]);
+
+    Result.fMatrix[1][2] = (fMatrix[1][0] * fMa.fMatrix[0][2]) + 
+                           (fMatrix[1][1] * fMa.fMatrix[1][2]) + 
+                           (fMatrix[1][2] * fMa.fMatrix[2][2]);
+
+    Result.fMatrix[1][3] = (fMatrix[1][0] * fMa.fMatrix[0][3]) + 
+                           (fMatrix[1][1] * fMa.fMatrix[1][3]) + 
+                           (fMatrix[1][2] * fMa.fMatrix[2][3]);
 
 
-    Result.fMatrix[2][0] = (fMatrix[2][0] * fMa.fMatrix[0][0]) + (fMatrix[2][1] + fMa.fMatrix[1][0]) + (fMatrix[2][2] * fMa.fMatrix[2][0]);
-    Result.fMatrix[2][1] = (fMatrix[2][0] * fMa.fMatrix[0][1]) + (fMatrix[2][1] * fMa.fMatrix[1][1]) + (fMatrix[2][2] * fMa.fMatrix[2][1]);
-    Result.fMatrix[2][2] = (fMatrix[2][0] * fMa.fMatrix[0][2]) + (fMatrix[2][1] * fMa.fMatrix[1][2]) + (fMatrix[2][2] * fMa.fMatrix[2][2]);
-    Result.fMatrix[2][3] = (fMatrix[2][0] * fMa.fMatrix[0][3]) + (fMatrix[2][1] * fMa.fMatrix[1][3]) + (fMatrix[2][2] * fMa.fMatrix[2][3]);
+    Result.fMatrix[2][0] = (fMatrix[2][0] * fMa.fMatrix[0][0]) + 
+                           (fMatrix[2][1] + fMa.fMatrix[1][0]) + 
+                           (fMatrix[2][2] * fMa.fMatrix[2][0]);
+
+    Result.fMatrix[2][1] = (fMatrix[2][0] * fMa.fMatrix[0][1]) + 
+                           (fMatrix[2][1] * fMa.fMatrix[1][1]) + 
+                           (fMatrix[2][2] * fMa.fMatrix[2][1]);
+
+    Result.fMatrix[2][2] = (fMatrix[2][0] * fMa.fMatrix[0][2]) + 
+                           (fMatrix[2][1] * fMa.fMatrix[1][2]) + 
+                           (fMatrix[2][2] * fMa.fMatrix[2][2]);
+
+    Result.fMatrix[2][3] = (fMatrix[2][0] * fMa.fMatrix[0][3]) + 
+                           (fMatrix[2][1] * fMa.fMatrix[1][3]) + 
+                           (fMatrix[2][2] * fMa.fMatrix[2][3]);
 
 
     return Result;
@@ -155,5 +177,29 @@ namespace dieEngineSDK {
         fMatrix[j][i] = Temp.fMatrix[i][j];
       }
     }
+  }
+
+  bool DieMatrix4D::operator==(DieMatrix4D &b)
+  {
+    bool veraz = false;
+    int i, j;
+
+    if ((filas != b.filas) || (columnas != b.columnas))
+      return 0;
+    else
+    {
+      for (i = 0; i < filas; i++)
+      {
+        for (j = 0; i < columnas; j++)
+        {
+          if (fMatrix[i][j] != b.fMatrix[i][j])
+            return 0;
+          else
+            veraz = true;
+        }
+      }
+    }
+    if (veraz == true)
+      return 1;
   }
 }
