@@ -5,14 +5,34 @@
 
 using namespace dieEngineSDK;
 
+TEST(Diego, Constantes) {
+  DiePlatformMath Consts;
+  ASSERT_TRUE(Consts.PI == 3.141592654f);
+  ASSERT_TRUE(Consts.PI2 == 6.28318530718f);
+  //ASSERT_TRUE(Consts.EPSILON == );
+  //ASSERT_TRUE(Consts.DELTA == );
+  //ASSERT_TRUE(Consts.EULER == );
+}
+
 TEST(Diego, Trigonometria) {
-  DiePlatformMath Die;
-  ASSERT_TRUE(Die.Sin(90.0f) == 0.8939966636f);
-  ASSERT_TRUE(Die.Cos(45.0f) == 0.5253219888f);
-  ASSERT_TRUE(Die.Tan(45.0f) == 1.619775191f);
-  ASSERT_TRUE(Die.Asin(1) == 1.57079633f);
-  ASSERT_TRUE(Die.Acos(-1) == 3.14159265f);
-  ASSERT_TRUE(Die.Atan(1) == 0.78539816f);
+  DiePlatformMath Trig;
+  ASSERT_TRUE(Trig.Sin(90.0f) == 0.8939966636f);
+  ASSERT_TRUE(Trig.Cos(45.0f) == 0.5253219888f);
+  ASSERT_TRUE(Trig.Tan(45.0f) == 1.619775191f);
+  ASSERT_TRUE(Trig.Asin(1) == 1.57079633f);
+  ASSERT_TRUE(Trig.Acos(-1) == 3.14159265f);
+  ASSERT_TRUE(Trig.Atan(1) == 0.78539816f);
+}
+
+TEST(Diego, Operaciones) {
+  DiePlatformMath math;
+  ASSERT_TRUE(math.Sqrt(9) == 3);
+  ASSERT_TRUE(math.Exponente(1) == 2.71828182845904523536f);
+  ASSERT_TRUE(math.Potencia(2, 3) == 8);
+
+  ASSERT_TRUE(math.Loge(1) == 0.0f);
+
+  ASSERT_TRUE(math.Logx(5, 125) == 3.0f);
 }
 
 //TEST(Diego, Matrizes) {
@@ -29,13 +49,32 @@ TEST(Diego, Trigonometria) {
 //  Matriz1.m_Elements.m03 = 0; Matriz1.m_Elements.m13 = 0;  Matriz1.m_Elements.m23 = 0;  Matriz1.m_Elements.m33 = 0;
 // 
 //  ASSERT_TRUE(Matriz1 == Matriz.Transposed());
+//
+//  /************************************************************************/
+//  /*                                                                      */
+//  /************************************************************************/
+//
 //}
 
 TEST(Diego, Vectores) {
   DieVector4D Vector;
-  DieVector4D vector1;
+  Vector.x = 5;
+  Vector.y = 0;
+  Vector.z = 0;
+  Vector.w = 0;
+  
+  DieVector4D Vector1;
+  Vector1.x = 1;
+  Vector1.y = 0;
+  Vector1.z = 0;
+  Vector1.w = 0;
 
-  ASSERT_TRUE(Vector == vector1.Normalize());
+  ASSERT_TRUE(Vector1 == Vector.Normalize());
+
+  /************************************************************************/
+  /*                                                                      */
+  /************************************************************************/
+
 }
 
 //void main() {

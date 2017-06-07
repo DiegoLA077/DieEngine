@@ -10,17 +10,17 @@ namespace dieEngineSDK {
   public:
     float PI = atanf(1) * 4;
     float PI2 = PI*2.0f;
-    float EPSILON= 0.0000000000085418781f;
+    float EPSILON = 0.0000000000085418781f;
     float DELTA = 0.00001f;
     float EULER = 2.71828182845904523536f;
   public:
     float Sqrt(float Value);
     float Exponente(float Value);
     float Potencia(float A, float B);
-
+  public:
     float Loge(float Value);
     float Logx(float Base, float Value);
-
+  public:
     float Sin(float Value);
     float Cos(float Value);
     float Tan(float Value);
