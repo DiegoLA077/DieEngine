@@ -18,6 +18,11 @@ namespace dieEngineSDK
     return (x == vectorA.x && y == vectorA.y && z == vectorA.z && w == vectorA.w);
   }
 
+  bool DieVector4D::operator==(float escalar)
+  {
+    return (x == escalar && y == escalar && z == escalar && w == escalar);
+  }
+
   bool DieVector4D::operator!=(DieVector4D &vectorA)
   {
     return !(*this == vectorA);
@@ -129,6 +134,15 @@ namespace dieEngineSDK
   float DieVector4D::Dot(DieVector4D &vectorA)
   {
     return x*vectorA.x + y*vectorA.y + z*vectorA.z + w*vectorA.w;
+  }
+  DieVector4D DieVector4D::Cruz(DieVector4D &vectorA, DieVector4D &vectorB)
+  {
+    DieVector4D NewVector;
+    NewVector.x = vectorA.y*vectorB.z - vectorA.z*vectorB.y;
+    NewVector.y = vectorA.x*vectorB.z - vectorA.z*vectorB.x;
+    NewVector.z = vectorA.x*vectorB.y - vectorA.y*vectorB.x;
+    NewVector.w = 0;
+    return NewVector;
   }
   float DieVector4D::Mag()
   {

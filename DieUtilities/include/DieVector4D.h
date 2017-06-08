@@ -29,10 +29,12 @@ namespace dieEngineSDK {
     DieVector4D DistanceVector(DieVector4D & Vector2d);
     DieVector4D Truncate(float MagFuerza);
     float Dot(DieVector4D &vectorA);
+    DieVector4D Cruz(DieVector4D & vectorA, DieVector4D & vectorB);
     float Mag();
     DieVector4D Normalize();
 
     bool operator==(DieVector4D & vectorA);
+    bool operator==(float escalar);
     bool operator!=(DieVector4D & vectorA);
 
     void Clear(void);

@@ -62,7 +62,7 @@ TEST(Diego, Vectores) {
   Vector.y = 0;
   Vector.z = 0;
   Vector.w = 0;
-  
+
   DieVector4D Vector1;
   Vector1.x = 1;
   Vector1.y = 0;
@@ -71,9 +71,32 @@ TEST(Diego, Vectores) {
 
   ASSERT_TRUE(Vector1 == Vector.Normalize());
 
-  /************************************************************************/
-  /*                                                                      */
-  /************************************************************************/
+  DieVector4D Vector2;
+  float temp;
+  Vector2.x = 5;
+  Vector2.y = 5;
+  Vector2.z = 5;
+  Vector2.w = 0;
+  temp = Vector2.Dot(Vector2);
+  ASSERT_TRUE(temp == 75.0f);
+
+  DieVector4D Vector0;
+  Vector0.x = -3;
+  Vector0.y = -2;
+  Vector0.z = 5;
+  Vector0.w = 0;
+  DieVector4D Vector01;
+  Vector01.x = 10;
+  Vector01.y = -6;
+  Vector01.z = -1;
+  Vector01.w = 0;
+  Vector = Vector.Cruz(Vector0, Vector01);
+  DieVector4D Vector03;
+  Vector03.x = 32;
+  Vector03.y = -47;
+  Vector03.z = 38;
+  Vector03.w = 0;
+  ASSERT_TRUE(Vector==Vector03);
 
 }
 
