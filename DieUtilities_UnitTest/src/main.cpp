@@ -8,10 +8,11 @@ using namespace dieEngineSDK;
 TEST(Diego, Constantes) {
   DiePlatformMath Consts;
   ASSERT_TRUE(Consts.PI == 3.141592654f);
+  ASSERT_TRUE(Consts.INVPI == 0.3183098862f);
   ASSERT_TRUE(Consts.PI2 == 6.28318530718f);
-  //ASSERT_TRUE(Consts.EPSILON == );
-  //ASSERT_TRUE(Consts.DELTA == );
-  //ASSERT_TRUE(Consts.EULER == );
+  ASSERT_TRUE(Consts.EPSILON == 0.0000000000085418781f);
+  ASSERT_TRUE(Consts.DELTA == 0.00001f);
+  ASSERT_TRUE(Consts.EULER == 2.71828182845904523536f);
 }
 
 TEST(Diego, Trigonometria) {
@@ -20,19 +21,24 @@ TEST(Diego, Trigonometria) {
   ASSERT_TRUE(Trig.Cos(45.0f) == 0.5253219888f);
   ASSERT_TRUE(Trig.Tan(45.0f) == 1.619775191f);
   ASSERT_TRUE(Trig.Asin(1) == 1.57079633f);
-  ASSERT_TRUE(Trig.Acos(-1) == 3.14159265f);
+  ASSERT_TRUE(Trig.Acos(-1) == 3.141592654f);
   ASSERT_TRUE(Trig.Atan(1) == 0.78539816f);
 }
 
 TEST(Diego, Operaciones) {
   DiePlatformMath math;
   ASSERT_TRUE(math.Sqrt(9) == 3);
+  ASSERT_TRUE(math.InverseSqrt(2) == 0.7071067812f);
   ASSERT_TRUE(math.Exponente(1) == 2.71828182845904523536f);
   ASSERT_TRUE(math.Potencia(2, 3) == 8);
 
   ASSERT_TRUE(math.Loge(1) == 0.0f);
-
   ASSERT_TRUE(math.Logx(5, 125) == 3.0f);
+
+  ASSERT_TRUE(math.Truncate(5.1f) == 5);
+  ASSERT_TRUE(math.Ceil(7.2) == 8);
+  ASSERT_TRUE(math.Floor(3.5) == 3);
+  ASSERT_TRUE(math.Round(4.7) == 5);
 }
 
 //TEST(Diego, Matrizes) {
@@ -68,7 +74,6 @@ TEST(Diego, Vectores) {
   Vector1.y = 0;
   Vector1.z = 0;
   Vector1.w = 0;
-
   ASSERT_TRUE(Vector1 == Vector.Normalize());
 
   DieVector4D Vector2;
@@ -96,7 +101,7 @@ TEST(Diego, Vectores) {
   Vector03.y = -47;
   Vector03.z = 38;
   Vector03.w = 0;
-  ASSERT_TRUE(Vector==Vector03);
+  ASSERT_TRUE(Vector == Vector03);
 
 }
 

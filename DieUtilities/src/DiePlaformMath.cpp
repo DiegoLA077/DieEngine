@@ -4,6 +4,11 @@ float dieEngineSDK::DiePlatformMath::Sqrt(float Value) {
   return sqrtf(Value);
 }
 
+float dieEngineSDK::DiePlatformMath::InverseSqrt(float Value)
+{
+  return(1.0f / sqrtf(Value));
+}
+
 float dieEngineSDK::DiePlatformMath::Exponente(float Value) {
   return expf(Value);
 }
@@ -44,9 +49,26 @@ float dieEngineSDK::DiePlatformMath::Atan(float Value) {
   return atanf(Value);
 }
 
-float dieEngineSDK::DiePlatformMath::Plane(float z, float x)
-{
+float dieEngineSDK::DiePlatformMath::Plane(float z, float x) {
   return 0.2 * cos(4 * z) * sin(4 * x);
+}
+
+int dieEngineSDK::DiePlatformMath::Truncate(float Value) {
+  return (int)Value;
+}
+
+
+
+int dieEngineSDK::DiePlatformMath::Round(float Value) {
+  return Floor(Value + 0.5f);
+}
+
+int dieEngineSDK::DiePlatformMath::Ceil(float Value) {
+  return Truncate(ceilf(Value));
+}
+
+int dieEngineSDK::DiePlatformMath::Floor(float Value) {
+  return Truncate(floorf(Value));
 }
 
 //DieVector4D dieEngineSDK::DiePlatformMath::Sphere(float u, float v, void*)
