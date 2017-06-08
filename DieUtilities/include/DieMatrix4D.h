@@ -33,12 +33,13 @@ namespace dieEngineSDK {
                 float e, float f, float g, float h,
                 float i, float j, float k, float l,
                 float m, float n, float o, float p);
-
+  public:
     void add(const DieMatrix4D& fMa);
     void rest(const DieMatrix4D& fMa);
     DieMatrix4D mult(const DieMatrix4D& fMa); 
     void Transposed();
-    bool operator==(DieMatrix4D & b);
+    bool operator==(DieMatrix4D & MatrizA);
+    
     DieMatrix4D(DieVector4D* a, DieVector4D* b, DieVector4D* c, DieVector4D* d);
 
   };

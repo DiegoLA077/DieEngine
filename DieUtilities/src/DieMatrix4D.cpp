@@ -179,12 +179,12 @@ namespace dieEngineSDK {
     }
   }
 
-  bool DieMatrix4D::operator==(DieMatrix4D &b)
+  bool DieMatrix4D::operator==(DieMatrix4D &MatrizA)
   {
     bool veraz = false;
     int i, j;
 
-    if ((filas != b.filas) || (columnas != b.columnas))
+    if ((filas != MatrizA.filas) || (columnas != MatrizA.columnas))
       return 0;
     else
     {
@@ -192,7 +192,7 @@ namespace dieEngineSDK {
       {
         for (j = 0; i < columnas; j++)
         {
-          if (fMatrix[i][j] != b.fMatrix[i][j])
+          if (fMatrix[i][j] != MatrizA.fMatrix[i][j])
             return 0;
           else
             veraz = true;
@@ -202,4 +202,5 @@ namespace dieEngineSDK {
     if (veraz == true)
       return 1;
   }
+
 }
