@@ -135,7 +135,7 @@ namespace dieEngineSDK
   {
     return x*vectorA.x + y*vectorA.y + z*vectorA.z + w*vectorA.w;
   }
-  DieVector4D DieVector4D::Cruz(DieVector4D &vectorA, DieVector4D &vectorB)
+  DieVector4D DieVector4D::Vectorial(DieVector4D &vectorA, DieVector4D &vectorB)
   {
     DieVector4D NewVector;
     NewVector.x = vectorA.y*vectorB.z - vectorA.z*vectorB.y;
