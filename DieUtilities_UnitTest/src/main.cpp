@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <DiePlaformMath.h>
-//#include <DieMatrix4D.h>
+#include <DieMatrix4D.h>
 #include <DieVector4D.h>
 
 using namespace dieEngineSDK;
@@ -41,26 +41,34 @@ TEST(Diego, Operaciones) {
   ASSERT_TRUE(math.Round(4.7) == 5);
 }
 
-//TEST(Diego, Matrizes) {
-//  DieMatrix4D Matriz;
-//  Matriz.m_Elements.m00 = 1; Matriz.m_Elements.m10 = 5; Matriz.m_Elements.m20 = 9;  Matriz.m_Elements.m30 = 0;
-//  Matriz.m_Elements.m01 = 2; Matriz.m_Elements.m11 = 6; Matriz.m_Elements.m21 = 10; Matriz.m_Elements.m31 = 0;
-//  Matriz.m_Elements.m02 = 3; Matriz.m_Elements.m12 = 7; Matriz.m_Elements.m22 = 11; Matriz.m_Elements.m32 = 0;
-//  Matriz.m_Elements.m03 = 4; Matriz.m_Elements.m13 = 8; Matriz.m_Elements.m23 = 12; Matriz.m_Elements.m33 = 0;
-//
-//  DieMatrix4D Matriz1;
-//  Matriz1.m_Elements.m00 = 1; Matriz1.m_Elements.m10 = 2;  Matriz1.m_Elements.m20 = 3;  Matriz1.m_Elements.m30 = 4;
-//  Matriz1.m_Elements.m01 = 5; Matriz1.m_Elements.m11 = 6;  Matriz1.m_Elements.m21 = 7;  Matriz1.m_Elements.m31 = 8;
-//  Matriz1.m_Elements.m02 = 9; Matriz1.m_Elements.m12 = 10; Matriz1.m_Elements.m22 = 11; Matriz1.m_Elements.m32 = 12;
-//  Matriz1.m_Elements.m03 = 0; Matriz1.m_Elements.m13 = 0;  Matriz1.m_Elements.m23 = 0;  Matriz1.m_Elements.m33 = 0;
-// 
-//  ASSERT_TRUE(Matriz1 == Matriz.Transposed());
-//
-//  /************************************************************************/
-//  /*                                                                      */
-//  /************************************************************************/
-//
-//}
+TEST(Diego, Matrizes) {
+  DieMatrix4D Matriz;
+
+  Matriz.m_Elements.m00 = 1; Matriz.m_Elements.m10 = 5; Matriz.m_Elements.m20 = 9;  Matriz.m_Elements.m30 = 0;
+  Matriz.m_Elements.m01 = 2; Matriz.m_Elements.m11 = 6; Matriz.m_Elements.m21 = 10; Matriz.m_Elements.m31 = 0;
+  Matriz.m_Elements.m02 = 3; Matriz.m_Elements.m12 = 7; Matriz.m_Elements.m22 = 11; Matriz.m_Elements.m32 = 0;
+  Matriz.m_Elements.m03 = 4; Matriz.m_Elements.m13 = 8; Matriz.m_Elements.m23 = 12; Matriz.m_Elements.m33 = 0;
+
+  DieMatrix4D Matriz1;
+  Matriz1.m_Elements.m00 = 1; Matriz1.m_Elements.m10 = 2;  Matriz1.m_Elements.m20 = 3;  Matriz1.m_Elements.m30 = 4;
+  Matriz1.m_Elements.m01 = 5; Matriz1.m_Elements.m11 = 6;  Matriz1.m_Elements.m21 = 7;  Matriz1.m_Elements.m31 = 8;
+  Matriz1.m_Elements.m02 = 9; Matriz1.m_Elements.m12 = 10; Matriz1.m_Elements.m22 = 11; Matriz1.m_Elements.m32 = 12;
+  Matriz1.m_Elements.m03 = 0; Matriz1.m_Elements.m13 = 0;  Matriz1.m_Elements.m23 = 0;  Matriz1.m_Elements.m33 = 0;
+  
+  DieMatrix4D Matriz2;
+  Matriz2.m_Elements.m00 = 2; Matriz2.m_Elements.m10 = 7;  Matriz2.m_Elements.m20 = 12;  Matriz2.m_Elements.m30 = 4;
+  Matriz2.m_Elements.m01 = 7; Matriz2.m_Elements.m11 = 12;  Matriz2.m_Elements.m21 = 17;  Matriz2.m_Elements.m31 = 8;
+  Matriz2.m_Elements.m02 = 12; Matriz2.m_Elements.m12 = 17; Matriz2.m_Elements.m22 = 22; Matriz2.m_Elements.m32 = 12;
+  Matriz2.m_Elements.m03 = 4; Matriz2.m_Elements.m13 = 8;  Matriz2.m_Elements.m23 = 12;  Matriz2.m_Elements.m33 = 0;
+
+ 
+  ASSERT_TRUE(Matriz == Matriz2);
+
+  /************************************************************************/
+  /*                                                                      */
+  /************************************************************************/
+
+}
 
 TEST(Diego, Vectores) {
   DieVector4D Vector;
@@ -95,7 +103,7 @@ TEST(Diego, Vectores) {
   Vector01.y = -6;
   Vector01.z = -1;
   Vector01.w = 0;
-  Vector = Vector.Cruz(Vector0, Vector01);
+  Vector = Vector.Vectorial(Vector0, Vector01);
   DieVector4D Vector03;
   Vector03.x = 32;
   Vector03.y = -47;

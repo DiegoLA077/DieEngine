@@ -66,8 +66,6 @@ namespace dieEngineSDK {
 
   void  DieMatrix4D::add(const DieMatrix4D& fMa)
   {
-
-
     for (int i = 0; i < 4; i++)
     {
 
@@ -77,7 +75,6 @@ namespace dieEngineSDK {
       }
 
     }
-
 
   }
   void DieMatrix4D::rest(const DieMatrix4D& fMa)
@@ -177,6 +174,7 @@ namespace dieEngineSDK {
         fMatrix[j][i] = Temp.fMatrix[i][j];
       }
     }
+
   }
 
   bool DieMatrix4D::operator==(DieMatrix4D &MatrizA)

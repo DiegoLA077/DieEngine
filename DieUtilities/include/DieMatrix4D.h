@@ -9,7 +9,7 @@ namespace dieEngineSDK {
     DieMatrix4D();
     ~DieMatrix4D();
 
-    float fMatrix[4][4];
+   
     int filas;
     int columnas;
 
