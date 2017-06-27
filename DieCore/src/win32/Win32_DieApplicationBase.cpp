@@ -1,7 +1,7 @@
 #include "DieAplicationBase.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "Win32/DieMinWindows.h"
 #include <iostream>
 #include <memory>
 

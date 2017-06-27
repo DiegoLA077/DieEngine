@@ -15,8 +15,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieGraphicsAPI", "DieGraphicsAPI\DieGraphicsAPI.vcxproj", "{1659D6B5-6AD6-4220-A3CA-C246B7A6A89E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieGraphicsAPI_UnitTest", "DieGraphicsAPI_UnitTest\DieGraphicsAPI_UnitTest.vcxproj", "{D61EA31F-AC56-4BE3-9406-6C23063E7B4F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1659D6B5-6AD6-4220-A3CA-C246B7A6A89E} = {1659D6B5-6AD6-4220-A3CA-C246B7A6A89E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieUtilities_UnitTest", "DieUtilities_UnitTest\DieUtilities_UnitTest.vcxproj", "{0122CBE5-D31E-42F1-8D09-1FAE2CFA818A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieRenderMan", "DieRenderMan\DieRenderMan.vcxproj", "{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +79,14 @@ Global
 		{0122CBE5-D31E-42F1-8D09-1FAE2CFA818A}.Release|x64.Build.0 = Release|x64
 		{0122CBE5-D31E-42F1-8D09-1FAE2CFA818A}.Release|x86.ActiveCfg = Release|Win32
 		{0122CBE5-D31E-42F1-8D09-1FAE2CFA818A}.Release|x86.Build.0 = Release|Win32
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Debug|x64.ActiveCfg = Debug|x64
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Debug|x64.Build.0 = Debug|x64
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Debug|x86.ActiveCfg = Debug|Win32
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Debug|x86.Build.0 = Debug|Win32
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Release|x64.ActiveCfg = Release|x64
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Release|x64.Build.0 = Release|x64
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Release|x86.ActiveCfg = Release|Win32
+		{ED18B31A-69D5-47E3-86A9-8397D4CFF9F1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

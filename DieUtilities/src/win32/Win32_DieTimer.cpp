@@ -6,7 +6,7 @@
 #if !defined(NOMINMAX) && defined(_MSC_VER)
 #define NOMINMAX //Required to stop windows.h messing up std::min
 #endif
-#include <windows.h>
+#include <Win32/DieMinWindows.h>
 #include <time.h>
 
 namespace dieEngineSDK {

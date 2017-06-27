@@ -16,6 +16,9 @@
     <Filter Include="Source Files\win32">
       <UniqueIdentifier>{e1d09941-7167-4866-8710-2990c52e627f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Win32">
+      <UniqueIdentifier>{c0690a88-d6df-42af-8600-b6a710795b8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DiePlatformTypes.h">
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="include\DiePlaformMath.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Win32\DieMinWindows.h">
+      <Filter>Header Files\Win32</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

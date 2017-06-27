@@ -43,7 +43,6 @@ TEST(Diego, Operaciones) {
 
 TEST(Diego, Matrizes) {
   DieMatrix4D Matriz;
-
   Matriz.m_Elements.m00 = 1; Matriz.m_Elements.m10 = 5; Matriz.m_Elements.m20 = 9;  Matriz.m_Elements.m30 = 0;
   Matriz.m_Elements.m01 = 2; Matriz.m_Elements.m11 = 6; Matriz.m_Elements.m21 = 10; Matriz.m_Elements.m31 = 0;
   Matriz.m_Elements.m02 = 3; Matriz.m_Elements.m12 = 7; Matriz.m_Elements.m22 = 11; Matriz.m_Elements.m32 = 0;
@@ -63,10 +62,6 @@ TEST(Diego, Matrizes) {
 
  
   //ASSERT_TRUE(Matriz == Matriz2);
-
-  /************************************************************************/
-  /*                                                                      */
-  /************************************************************************/
 
 }
 
