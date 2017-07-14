@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieCore", "DieCore\DieCore.vcxproj", "{F066056B-AB5C-42B5-B145-C85FEBFC4915}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieGraphicsAPI", "DieGraphicsAPI\DieGraphicsAPI.vcxproj", "{1659D6B5-6AD6-4220-A3CA-C246B7A6A89E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9207102A-C10C-4BAA-90E2-8E025462A60B} = {9207102A-C10C-4BAA-90E2-8E025462A60B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DieGraphicsAPI_UnitTest", "DieGraphicsAPI_UnitTest\DieGraphicsAPI_UnitTest.vcxproj", "{D61EA31F-AC56-4BE3-9406-6C23063E7B4F}"
 	ProjectSection(ProjectDependencies) = postProject

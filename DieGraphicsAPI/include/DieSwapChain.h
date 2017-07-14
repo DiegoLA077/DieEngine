@@ -4,18 +4,17 @@
 
 namespace dieEngineSDK {
 
-  class DIE_GRAPHICS_EXPORT DieDeviceContext
+  class DIE_GRAPHICS_EXPORT DieSwapChain
   {
   private:
-    ID3D11DeviceContext* pDie_DeviceContext;
+    IDXGISwapChain* pDie_SwapChain;
   public:
-    DieDeviceContext();
-    ~DieDeviceContext();
+    DieSwapChain();
+    ~DieSwapChain();
 
     void Create();
     void Destroy();
     void* GetObject();
     void** GetReference();
-    
   };
 }

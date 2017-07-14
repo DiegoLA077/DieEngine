@@ -98,14 +98,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>DIE_GRAPHICS_EXPORTS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DieUtilites\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <FullProgramDatabaseFile>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).pdb</FullProgramDatabaseFile>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DieUtilitiesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,14 +116,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>DIE_GRAPHICS_EXPORTS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DieUtilites\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <FullProgramDatabaseFile>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).pdb</FullProgramDatabaseFile>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DieUtilitiesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -134,7 +136,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>DIE_GRAPHICS_EXPORTS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DieUtilites\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -143,6 +145,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <FullProgramDatabaseFile>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).pdb</FullProgramDatabaseFile>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>DieUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -154,7 +158,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>DIE_GRAPHICS_EXPORTS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;DieUtilites\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -163,18 +167,26 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <FullProgramDatabaseFile>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).pdb</FullProgramDatabaseFile>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>DieUtilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\DieBufferBase.h" />
     <ClInclude Include="include\DieDevice.h" />
     <ClInclude Include="include\DieDeviceContext.h" />
     <ClInclude Include="include\DiePrerequisitesGraphics.h" />
     <ClInclude Include="include\DieRenderTargetView.h" />
+    <ClInclude Include="include\DieShaderBase.h" />
+    <ClInclude Include="include\DieSwapChain.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\DieBufferBase.cpp" />
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
     <ClCompile Include="src\DieRenderTargetView.cpp" />
+    <ClCompile Include="src\DieShaderBase.cpp" />
+    <ClCompile Include="src\DieSwapChain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

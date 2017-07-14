@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
+
 #if defined(DIE_GRAPHICS_STATIC_LIB)
 #define DIE_GRAPHICS_EXPORT
 #else

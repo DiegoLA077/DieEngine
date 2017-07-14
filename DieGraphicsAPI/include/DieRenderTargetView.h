@@ -1,16 +1,20 @@
 #pragma once
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
+#include <DiePrerequisitesGraphics.h>
 
 namespace dieEngineSDK {
 
-  class DieRenderTargetView
+  class DIE_GRAPHICS_EXPORT DieRenderTargetView
   {
+  private:
+    ID3D11RenderTargetView* pDie_RenderTargetView;
+  public:
     DieRenderTargetView();
     ~DieRenderTargetView();
 
-
-    ID3D11RenderTargetView* Die_RenderTargetView;
+    void Create();
+    void Destroy();
+    void* GetObject();
+    void** GetReference();
   };
 }

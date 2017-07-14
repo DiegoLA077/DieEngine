@@ -1,15 +1,12 @@
-
-//--------------------------------------------------------------------------------------
-// File: Tutorial01.cpp
-//
-// This application demonstrates creating a Direct3D 11 device
-//
-// Copyright (c) Microsoft Corporation. All rights reserved.
-//--------------------------------------------------------------------------------------
 #include <Win32/DieMinWindows.h>
 #include <d3d11.h>
+#include <d3dcompiler.h>
 
+#include <DieVector4D.h>
 #include <DieDevice.h>
+#include <DieDeviceContext.h>
+#include <DieSwapChain.h>
+#include <DieRenderTargetView.h>
 
 using namespace dieEngineSDK;
 //--------------------------------------------------------------------------------------
@@ -19,10 +16,11 @@ HINSTANCE               g_hInst = NULL;
 HWND                    g_hWnd = NULL;
 D3D_DRIVER_TYPE         g_driverType = D3D_DRIVER_TYPE_NULL;
 D3D_FEATURE_LEVEL       g_featureLevel = D3D_FEATURE_LEVEL_11_0;
+
 DieDevice               gDie_Device;
-ID3D11DeviceContext*    g_pImmediateContext = NULL;
-IDXGISwapChain*         g_pSwapChain = NULL;
-ID3D11RenderTargetView* g_pRenderTargetView = NULL;
+DieDeviceContext        gDie_DeviceContext;
+DieSwapChain            gDie_SwapChain;
+DieRenderTargetView     gDie_RenderTargetView;
 
 
 //--------------------------------------------------------------------------------------
@@ -64,6 +62,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     }
     else
     {
+      //SetInfoToRender();
       Render();
     }
   }
@@ -98,9 +97,9 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 
   // Create window
   g_hInst = hInstance;
-  RECT rc = { 0, 0, 640, 480 };
+  RECT rc = { 0, 0, 1080, 720 };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-  g_hWnd = CreateWindow("TutorialWindowClass", "Direct3D 11 Tutorial 1: Direct3D 11 Basics", WS_OVERLAPPEDWINDOW,
+  g_hWnd = CreateWindow("TutorialWindowClass", "DieEngine", WS_OVERLAPPEDWINDOW,
     CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
     NULL);
   if (!g_hWnd)
@@ -139,6 +138,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
+ID3D11Device** pDevice = reinterpret_cast<ID3D11Device**> (gDie_Device.GetReference());
+ID3D11DeviceContext** pDeviceContext = reinterpret_cast<ID3D11DeviceContext**> (gDie_DeviceContext.GetReference());
+IDXGISwapChain** pSwapChain = reinterpret_cast<IDXGISwapChain**> (gDie_SwapChain.GetReference());
+ID3D11RenderTargetView** pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView**> (gDie_RenderTargetView.GetReference());
 //--------------------------------------------------------------------------------------
 // Create Direct3D device and swap chain
 //--------------------------------------------------------------------------------------
@@ -186,12 +189,13 @@ HRESULT InitDevice()
   sd.SampleDesc.Quality = 0;
   sd.Windowed = TRUE;
 
-  ID3D11Device** pDevice = reinterpret_cast<ID3D11Device**> (gDie_Device.GetReference());
+ 
+
   for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
   {
     g_driverType = driverTypes[driverTypeIndex];
     hr = D3D11CreateDeviceAndSwapChain(NULL, g_driverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
-      D3D11_SDK_VERSION, &sd, &g_pSwapChain, pDevice, &g_featureLevel, &g_pImmediateContext);
+      D3D11_SDK_VERSION, &sd, pSwapChain, pDevice, &g_featureLevel, pDeviceContext);
     if (SUCCEEDED(hr))
       break;
   }
@@ -200,16 +204,16 @@ HRESULT InitDevice()
 
   // Create a render target view
   ID3D11Texture2D* pBackBuffer = NULL;
-  hr = g_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+  hr = (*pSwapChain)->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
   if (FAILED(hr))
     return hr;
 
-  hr = (*pDevice)->CreateRenderTargetView(pBackBuffer, NULL, &g_pRenderTargetView);
+  hr = (*pDevice)->CreateRenderTargetView(pBackBuffer, NULL, pRenderTargetView);
   pBackBuffer->Release();
   if (FAILED(hr))
     return hr;
 
-  g_pImmediateContext->OMSetRenderTargets(1, &g_pRenderTargetView, NULL);
+  (*pDeviceContext)->OMSetRenderTargets(1, pRenderTargetView, NULL);
 
   // Setup the viewport
   D3D11_VIEWPORT vp;
@@ -219,11 +223,101 @@ HRESULT InitDevice()
   vp.MaxDepth = 1.0f;
   vp.TopLeftX = 0;
   vp.TopLeftY = 0;
-  g_pImmediateContext->RSSetViewports(1, &vp);
+  (*pDeviceContext)->RSSetViewports(1, &vp);
 
   return S_OK;
 }
 
+//void SetInfoToRender()
+//{
+//  /* ID3DBlob* MyShaderCompileInfoCode ;
+//
+//   ID3D11InputLayout* ILayOut;
+//
+//   D3D11_INPUT_ELEMENT_DESC layout[] =
+//   {
+//     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+//   };
+//
+//
+//   ID3DBlob* pErrorBlob;
+//   HRESULT hr;
+//     hr =  D3DCompileFromFile("bin\Resource\Shaders\ShaderTest.hlsl", NULL, NULL, "VS", "VS_5_0",
+//     D3DCOMPILE_DEBUG, 0, MyShaderCompileInfoCode, &pErrorBlob);
+//
+//
+//   (*pDevice)->CreateInputLayout(layout, 0, MyShaderCompileInfoCode->GetBufferPointer(), MyShaderCompileInfoCode->GetBufferSize(), &ILayOut);
+// */
+//
+//  ID3D11Buffer* pVertexB;
+//  ID3D11Buffer* pIndexB;
+//
+//  //Create VertexBuffer
+//
+//  struct Vertex
+//  {
+//   DieVector4D m_Pos;
+//  };
+//  Vertex VerToRender[3]
+//  {
+//    DieVector4D(0.0f, 0.5f, 0.5f, 0.f),
+//    DieVector4D(0.5f, -0.5f,   0.5f, 0.f),
+//    DieVector4D(-0.5f, -0.5f,  0.5f, 0.f)  
+//  };
+//
+//  
+//  D3D11_BUFFER_DESC DesVerBuffer;
+//  DesVerBuffer.BindFlags= D3D11_BIND_VERTEX_BUFFER;
+//  DesVerBuffer.ByteWidth= sizeof(Vertex)*3; //Tamaño buffer  
+//  DesVerBuffer.CPUAccessFlags= 0;
+//  DesVerBuffer.MiscFlags=0;
+//  DesVerBuffer.Usage = D3D11_USAGE_DEFAULT;
+//
+//  D3D11_SUBRESOURCE_DATA InitData;
+//  ZeroMemory(&InitData, sizeof(InitData));
+//  InitData.pSysMem = VerToRender;
+//
+//  (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
+//
+//
+//  //Index Buffer
+//  struct INDEX
+//  {
+//    float m_Pos;
+//
+//  };
+//
+//  INDEX IndexToRender[3]
+//  {
+//    float(1.0f),
+//    float(2.0f),
+//    float(3.0f)
+//  };
+//
+//  
+//  D3D11_BUFFER_DESC DesIndBuffer;
+//  DesIndBuffer.BindFlags = D3D11_BIND_INDEX_BUFFER;
+//  DesIndBuffer.ByteWidth = sizeof(INDEX) * 3; //Tamaño buffer  
+//  DesIndBuffer.CPUAccessFlags = 0;
+//  DesIndBuffer.MiscFlags = 0;
+//  DesIndBuffer.Usage = D3D11_USAGE_DEFAULT;
+//
+//  D3D11_SUBRESOURCE_DATA InitData;
+//  ZeroMemory(&InitData, sizeof(InitData));
+//  InitData.pSysMem = IndexToRender;
+//
+//  (*pDevice)->CreateBuffer(&DesIndBuffer, &InitData, &pIndexB);
+//
+//  
+//
+//  UINT  stride = sizeof(Vertex);
+//
+//  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
+//
+//
+//  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+//
+//}
 
 //--------------------------------------------------------------------------------------
 // Render the frame
@@ -231,9 +325,9 @@ HRESULT InitDevice()
 void Render()
 {
   // Just clear the backbuffer
-  float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; //red,green,blue,alpha
-  g_pImmediateContext->ClearRenderTargetView(g_pRenderTargetView, ClearColor);
-  g_pSwapChain->Present(0, 0);
+  float ClearColor[4] = { 0.0f, 255.0f, 255.0f, 1.0f }; //red,green,blue,alpha
+  (*pDeviceContext)->ClearRenderTargetView(*pRenderTargetView, ClearColor);
+  (*pSwapChain)->Present(0, 0);
 }
 
 
@@ -242,10 +336,10 @@ void Render()
 //--------------------------------------------------------------------------------------
 void CleanupDevice()
 {
-  if (g_pImmediateContext) g_pImmediateContext->ClearState();
+  //if (g_pImmediateContext) g_pImmediateContext->ClearState();
 
-  if (g_pRenderTargetView) g_pRenderTargetView->Release();
-  if (g_pSwapChain) g_pSwapChain->Release();
-  if (g_pImmediateContext) g_pImmediateContext->Release();
- // if (g_pd3dDevice) g_pd3dDevice->Release();
+  //if (g_pRenderTargetView) g_pRenderTargetView->Release();
+  //if (g_pSwapChain) g_pSwapChain->Release();
+  //if (g_pImmediateContext) g_pImmediateContext->Release();
+  //if (g_pd3dDevice) g_pd3dDevice->Release();
 }
