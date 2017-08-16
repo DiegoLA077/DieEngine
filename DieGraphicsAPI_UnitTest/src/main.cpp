@@ -241,6 +241,7 @@ HRESULT InitDevice()
 
 ID3D11Buffer* pVertexB;
 ID3D11Buffer* pIndexB;
+ID3D11VertexShader* Vs;
 
 void SetInfoToRender()
 {
@@ -319,6 +320,10 @@ void SetInfoToRender()
 
   UINT stride = sizeof(Vertex);
 
+  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
+  (*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
+  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+ 
 }
 
 void createVertexShader()
@@ -415,11 +420,9 @@ void Render()
   ID3D11RenderTargetView* pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView*> (gDie_RenderTargetView.GetObject());
 
   (*pDeviceContext)->ClearRenderTargetView(pRenderTargetView, ClearColor);
-  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
-  (*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
-  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-  (*pDeviceContext)->VSSetShader(pVertexShader, 0, 0);
- 
+  
+  (*pDeviceContext)->VSSetShader(Vs, NULL, NULL);
+  (*pDeviceContext)->Draw(3, 0);
   (*pSwapChain)->Present(0, 0);
 }
 
