@@ -2,6 +2,11 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
+#include <iostream>
+#include <fstream>
+#include <string.h>
+#include <vector>
+
 #include <DieVector4D.h>
 #include <DieDevice.h>
 #include <DieDeviceContext.h>
@@ -22,7 +27,7 @@ DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
 DieRenderTargetView     gDie_RenderTargetView;
 
-
+ID3DBlob* pVertexShader = nullptr;
 //--------------------------------------------------------------------------------------
 // Forward declarations
 //--------------------------------------------------------------------------------------
@@ -31,7 +36,7 @@ HRESULT InitDevice();
 void CleanupDevice();
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void Render();
-
+void createVertexShader();
 
 //--------------------------------------------------------------------------------------
 // Entry point to the program. Initializes everything and goes into a message processing 
@@ -55,6 +60,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
   MSG msg = { 0 };
   while (WM_QUIT != msg.message)
   {
+
     if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
     {
       TranslateMessage(&msg);
@@ -189,7 +195,7 @@ HRESULT InitDevice()
   sd.SampleDesc.Quality = 0;
   sd.Windowed = TRUE;
 
- 
+
 
   for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
   {
@@ -208,6 +214,8 @@ HRESULT InitDevice()
   if (FAILED(hr))
     return hr;
 
+  ID3D11RenderTargetView** pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView**> (gDie_RenderTargetView.GetReference());
+
   hr = (*pDevice)->CreateRenderTargetView(pBackBuffer, NULL, pRenderTargetView);
   pBackBuffer->Release();
   if (FAILED(hr))
@@ -225,97 +233,174 @@ HRESULT InitDevice()
   vp.TopLeftY = 0;
   (*pDeviceContext)->RSSetViewports(1, &vp);
 
+  createVertexShader();
+
   return S_OK;
 }
 
-//void SetInfoToRender()
+
+ID3D11Buffer* pVertexB;
+ID3D11Buffer* pIndexB;
+
+void SetInfoToRender()
+{
+  ID3DBlob* MyShaderCompileInfoCode;
+
+  ID3D11InputLayout* ILayOut;
+
+  D3D11_INPUT_ELEMENT_DESC layout[] =
+  {
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+  };
+
+
+  ID3DBlob* pErrorBlob;
+  HRESULT hr;
+
+
+  (*pDevice)->CreateInputLayout(layout, 0, pVertexShader->GetBufferPointer(), pVertexShader->GetBufferSize(), &ILayOut);
+
+  (*pDeviceContext)->IASetInputLayout(ILayOut);
+    
+  //Create VertexBuffer
+
+  struct Vertex
+  {
+    DieVector4D m_Pos;
+  };
+  Vertex VerToRender[3]
+  {
+    DieVector4D(0.0f, 0.5f, 0.5f, 0.f),
+    DieVector4D(0.5f, -0.5f,   0.5f, 0.f),
+    DieVector4D(-0.5f, -0.5f,  0.5f, 0.f)
+  };
+
+
+  D3D11_BUFFER_DESC DesVerBuffer;
+  DesVerBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+  DesVerBuffer.ByteWidth = sizeof(Vertex) * 3; //Tamaño buffer  
+  DesVerBuffer.CPUAccessFlags = 0;
+  DesVerBuffer.MiscFlags = 0;
+  DesVerBuffer.Usage = D3D11_USAGE_DEFAULT;
+
+  D3D11_SUBRESOURCE_DATA InitData;
+  ZeroMemory(&InitData, sizeof(InitData));
+  InitData.pSysMem = VerToRender;
+
+  (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
+
+
+  //Index Buffer
+  struct INDEX
+  {
+    UINT m_Pos;
+
+  };
+
+  INDEX IndexToRender[3]
+  {
+    1,2,3
+  };
+
+
+  D3D11_BUFFER_DESC DesIndBuffer;
+  DesIndBuffer.BindFlags = D3D11_BIND_INDEX_BUFFER;
+  DesIndBuffer.ByteWidth = sizeof(INDEX) * 3; //Tamaño buffer  
+  DesIndBuffer.CPUAccessFlags = 0;
+  DesIndBuffer.MiscFlags = 0;
+  DesIndBuffer.Usage = D3D11_USAGE_DEFAULT;
+
+  D3D11_SUBRESOURCE_DATA mInitData;
+  ZeroMemory(&mInitData, sizeof(mInitData));
+  mInitData.pSysMem = IndexToRender;
+
+  (*pDevice)->CreateBuffer(&DesIndBuffer, &mInitData, &pIndexB);
+
+
+  UINT stride = sizeof(Vertex);
+
+}
+
+void createVertexShader()
+{
+  std::string prmFileName;
+  std::string prmEntryPoint;
+  /************************************************************************/
+  std::string fileName = "Resource\\Shaders\\ShaderTest.hlsl";
+  std::fstream myFileStream;
+  myFileStream.open(fileName, std::ios::in | std::ios::out | std::ios::ate);
+  unsigned int fileLeght = myFileStream.tellg();
+  myFileStream.seekg(0, std::ios::beg);
+
+  std::string pBuffer;
+  pBuffer.resize(fileLeght + 1, 0);
+  myFileStream.read(&pBuffer[0], fileLeght);
+
+  myFileStream.close();
+  /************************************************************************/
+
+
+  // Compile the vertex shader
+  HRESULT hr = S_OK;
+
+  DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+  // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+  // Setting this flag improves the shader debugging experience, but still allows 
+  // the shaders to be optimized and to run exactly the way they will run in 
+  // the release configuration of this program.
+  dwShaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+
+  ID3DBlob* pErrorBlob;
+ 
+  ID3D11VertexShader* VertexShader = nullptr;
+  hr = D3DCompile(pBuffer.c_str(), pBuffer.size(), fileName.c_str(), NULL, NULL,
+    "VS", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_ENABLE_STRICTNESS, 0, &pVertexShader, &pErrorBlob);
+  if (FAILED(hr))
+  {
+    if (pErrorBlob != NULL)
+      OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+    if (pErrorBlob) pErrorBlob->Release();
+  }
+  if (pErrorBlob) pErrorBlob->Release();
+
+  // Create the vertex shader
+  hr = gDie_Device.pDie_Device->CreateVertexShader(pVertexShader->GetBufferPointer(), pVertexShader->GetBufferSize(), NULL, &VertexShader);
+  if (FAILED(hr))
+  {
+    pVertexShader->Release();
+  }
+}
+
+//void cancer()
 //{
-//  /* ID3DBlob* MyShaderCompileInfoCode ;
+//  std::string fileName = "ShaderTest.hlsl";
+//  std::ifstream myFileStream(fileName, std::ios::binary & std::ios::ate);
 //
-//   ID3D11InputLayout* ILayOut;
-//
-//   D3D11_INPUT_ELEMENT_DESC layout[] =
-//   {
-//     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-//   };
-//
-//
-//   ID3DBlob* pErrorBlob;
-//   HRESULT hr;
-//     hr =  D3DCompileFromFile("bin\Resource\Shaders\ShaderTest.hlsl", NULL, NULL, "VS", "VS_5_0",
-//     D3DCOMPILE_DEBUG, 0, MyShaderCompileInfoCode, &pErrorBlob);
-//
-//
-//   (*pDevice)->CreateInputLayout(layout, 0, MyShaderCompileInfoCode->GetBufferPointer(), MyShaderCompileInfoCode->GetBufferSize(), &ILayOut);
-// */
-//
-//  ID3D11Buffer* pVertexB;
-//  ID3D11Buffer* pIndexB;
-//
-//  //Create VertexBuffer
-//
-//  struct Vertex
+//  if (!myFileStream.is_open())
 //  {
-//   DieVector4D m_Pos;
-//  };
-//  Vertex VerToRender[3]
-//  {
-//    DieVector4D(0.0f, 0.5f, 0.5f, 0.f),
-//    DieVector4D(0.5f, -0.5f,   0.5f, 0.f),
-//    DieVector4D(-0.5f, -0.5f,  0.5f, 0.f)  
-//  };
+//    std::cout << "Cancer";
 //
-//  
-//  D3D11_BUFFER_DESC DesVerBuffer;
-//  DesVerBuffer.BindFlags= D3D11_BIND_VERTEX_BUFFER;
-//  DesVerBuffer.ByteWidth= sizeof(Vertex)*3; //Tamaño buffer  
-//  DesVerBuffer.CPUAccessFlags= 0;
-//  DesVerBuffer.MiscFlags=0;
-//  DesVerBuffer.Usage = D3D11_USAGE_DEFAULT;
+//    return;
+//  }
 //
-//  D3D11_SUBRESOURCE_DATA InitData;
-//  ZeroMemory(&InitData, sizeof(InitData));
-//  InitData.pSysMem = VerToRender;
+//  unsigned int fileLeght = myFileStream.tellg();
+//  myFileStream.seekg(std::fstream::beg);
 //
-//  (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
+//  std::vector<char> pBuffer(fileLeght);
+//  myFileStream.read(&pBuffer[0], fileLeght);
 //
+//  std::string myfileContent;
+//  myfileContent.reserve(fileLeght);
+//  myfileContent.insert(myfileContent.begin(), pBuffer.begin(), pBuffer.end());
 //
-//  //Index Buffer
-//  struct INDEX
-//  {
-//    float m_Pos;
+//  std::cout << "El Archivo pesa: " << fileLeght << " bytes" << std::endl;
+//  std::cout << "GG" << std::endl;
 //
-//  };
-//
-//  INDEX IndexToRender[3]
-//  {
-//    float(1.0f),
-//    float(2.0f),
-//    float(3.0f)
-//  };
-//
-//  
-//  D3D11_BUFFER_DESC DesIndBuffer;
-//  DesIndBuffer.BindFlags = D3D11_BIND_INDEX_BUFFER;
-//  DesIndBuffer.ByteWidth = sizeof(INDEX) * 3; //Tamaño buffer  
-//  DesIndBuffer.CPUAccessFlags = 0;
-//  DesIndBuffer.MiscFlags = 0;
-//  DesIndBuffer.Usage = D3D11_USAGE_DEFAULT;
-//
-//  D3D11_SUBRESOURCE_DATA InitData;
-//  ZeroMemory(&InitData, sizeof(InitData));
-//  InitData.pSysMem = IndexToRender;
-//
-//  (*pDevice)->CreateBuffer(&DesIndBuffer, &InitData, &pIndexB);
-//
-//  
-//
-//  UINT  stride = sizeof(Vertex);
-//
-//  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
-//
-//
-//  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+//  std::ofstream fileOut("exitFile.txt", std::ios::binary);
+//  fileOut.write(reinterpret_cast<char*> (&myfileContent), sizeof(myfileContent));
+//  fileOut.close();
 //
 //}
 
@@ -326,7 +411,15 @@ void Render()
 {
   // Just clear the backbuffer
   float ClearColor[4] = { 0.0f, 255.0f, 255.0f, 1.0f }; //red,green,blue,alpha
-  (*pDeviceContext)->ClearRenderTargetView(*pRenderTargetView, ClearColor);
+
+  ID3D11RenderTargetView* pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView*> (gDie_RenderTargetView.GetObject());
+
+  (*pDeviceContext)->ClearRenderTargetView(pRenderTargetView, ClearColor);
+  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
+  (*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
+  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  (*pDeviceContext)->VSSetShader(pVertexShader, 0, 0);
+ 
   (*pSwapChain)->Present(0, 0);
 }
 
@@ -338,7 +431,7 @@ void CleanupDevice()
 {
   //if (g_pImmediateContext) g_pImmediateContext->ClearState();
 
-  //if (g_pRenderTargetView) g_pRenderTargetView->Release();
+  //if (pRenderTargetView) pRenderTargetView
   //if (g_pSwapChain) g_pSwapChain->Release();
   //if (g_pImmediateContext) g_pImmediateContext->Release();
   //if (g_pd3dDevice) g_pd3dDevice->Release();

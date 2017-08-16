@@ -6,7 +6,7 @@ namespace dieEngineSDK {
 
   class DIE_GRAPHICS_EXPORT DieDevice
   {
-  private:
+    public:
     ID3D11Device* pDie_Device;
   public:
     DieDevice();

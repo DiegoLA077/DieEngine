@@ -177,7 +177,6 @@
     <ClInclude Include="include\DieDeviceContext.h" />
     <ClInclude Include="include\DiePrerequisitesGraphics.h" />
     <ClInclude Include="include\DieRenderTargetView.h" />
-    <ClInclude Include="include\DieShaderBase.h" />
     <ClInclude Include="include\DieSwapChain.h" />
   </ItemGroup>
   <ItemGroup>
@@ -185,7 +184,6 @@
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
     <ClCompile Include="src\DieRenderTargetView.cpp" />
-    <ClCompile Include="src\DieShaderBase.cpp" />
     <ClCompile Include="src\DieSwapChain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
