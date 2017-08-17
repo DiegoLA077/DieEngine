@@ -124,35 +124,25 @@
 //Windows specific settings
 
 #if DIE_PLATFORM == DIE_PLATFORM_WIN32
-#if defined (STATIC_LIB)
-#define D_UTILITIES_EXPORT
-#else
-#if defined(UTILITIES_EXPORTS)
-#define D_UTILITIES_EXPORT __declspec(dllexport)
-#else
-#if defined (__MINGW32__)
-#define D_UTILITIES_EXPORT
-#else
-#define  D_UTILITIES_EXPORT __declspec(dllimport)
-#endif
-#endif
+# if defined (DIE_UTILITIES_STATIC_LIB)
+#   define DIE_UTILITIES_EXPORT
+# else
+#   if defined(DIE_UTILITIES_EXPORTS)
+#     define DIE_UTILITIES_EXPORT __declspec(dllexport)
+#   else
+#     if defined (__MINGW32__)
+#       define DIE_UTILITIES_EXPORT
+#     else
+#       define  DIE_UTILITIES_EXPORT __declspec(dllimport)
+#     endif
+#   endif
+# endif
 #endif
 
 #if defined(_DEBUG) || defined(DEBUG)
-#define DEBUG_MODE 1
+  #define DEBUG_MODE 1
 #else
-#define DEBUG_MODE 0 
-#endif
-#if D_COMPILER == D_COMPILER_INTEL
-#define THREADLOCAL __declspec(thread)
-#endif
-#endif
-
-#if D_PLATFORM == D_PLATFORM_LINUX || PLATFORM == D_PLATFORM_APPLE
-#if defined (GCC_VISIBILITY)
-#define UTILITY_EXPORT __attribute__ ((visibility("default")))
-#else
-#define UTILITY_EXPORT
+  #define DEBUG_MODE 0 
 #endif
 
 #define stricmp strcasecmp
@@ -163,37 +153,10 @@
 #define DEBUG_MODE 0
 #endif
 
-#if D_COMPILER == D_COMPILER_INTEL
-#define THREADLOCAL __thread
-#endif
-#endif
-
-#if D_PLATFORM == D_PLATFORM_PS4
-#if defined (STATIC_LIB)
-#define UTILITY_EXPORT
-#else
-#if defined(UTILITY_EXPORTS)
-#define UTILITY_EXPORT __declspec(dllexport)
-#else
-#if defined (__MINGW32__)
-#define UTILITY_EXPORT
-#else
-#define  UTILITY_EXPORT __declspec(dllimport)
-#endif
-#endif
-#endif
-
-#if defined(_DEBUG) || defined(DEBUG)
-#define DEBUG_MODE 1
-#else
-#define DEBUG_MODE 0 
-#endif
-#endif
-
 #if DEBUG_MODE
-#define DEBUG_ONLY(x)x
-#define D_ASSERT(x) assert x
+  #define DEBUG_ONLY(x)x
+  #define D_ASSERT(x) assert x
 #else
-#define DEBUG_ONLY(x)
-#define D_ASSERT(x)
+  #define DEBUG_ONLY(x)
+  #define D_ASSERT(x)
 #endif

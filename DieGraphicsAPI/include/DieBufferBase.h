@@ -3,6 +3,7 @@
 #include "vector"
 
 namespace dieEngineSDK {
+  class DieDeviceContext;
 
   namespace BUFFER_USAGE_FLAGS {
     enum E {
@@ -38,8 +39,11 @@ namespace dieEngineSDK {
   void Clear();
 
   void CreateHardwareBuffer(int usageFlags = BUFFER_USAGE_FLAGS::kDEFAULT);
+  void SetHardwareBuffer(DieDeviceContext* pDevice, unsigned int offset);
 
     private:
     std::vector<T> m_indexArray;
   };
+
+
 }

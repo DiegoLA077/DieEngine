@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="include\DieMatrix4D.h" />
     <ClInclude Include="include\DiePlaformMath.h" />
+    <ClInclude Include="include\DiePlatformDefine.h" />
     <ClInclude Include="include\DiePlatformTypes.h" />
     <ClInclude Include="include\DiePrerequisites.h" />
     <ClInclude Include="include\DieTimer.h" />

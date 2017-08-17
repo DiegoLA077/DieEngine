@@ -1,10 +1,6 @@
 #include <Win32/DieMinWindows.h>
-#include <d3d11.h>
-#include <d3dcompiler.h>
 
 #include <iostream>
-#include <fstream>
-#include <string.h>
 #include <vector>
 
 #include <DieVector4D.h>
@@ -12,6 +8,9 @@
 #include <DieDeviceContext.h>
 #include <DieSwapChain.h>
 #include <DieRenderTargetView.h>
+#include <DiePixelShader.h>
+#include <DieVertexShader.h>
+#include <DieBufferBase.h>
 
 using namespace dieEngineSDK;
 //--------------------------------------------------------------------------------------
@@ -27,7 +26,13 @@ DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
 DieRenderTargetView     gDie_RenderTargetView;
 
-ID3DBlob* pVertexShader = nullptr;
+typedef dieEngineSDK::DieIndexBuffer<unsigned int> DieIndexBuffer32;
+
+DieIndexBuffer32  g_IndexBuffer;
+
+DiePixelShader          g_PS;
+DieVertexShader         g_VS;
+
 //--------------------------------------------------------------------------------------
 // Forward declarations
 //--------------------------------------------------------------------------------------
@@ -259,7 +264,7 @@ void SetInfoToRender()
   HRESULT hr;
 
 
-  (*pDevice)->CreateInputLayout(layout, 0, pVertexShader->GetBufferPointer(), pVertexShader->GetBufferSize(), &ILayOut);
+  (*pDevice)->CreateInputLayout(layout, 0, g_VS.m_pBlob->GetBufferPointer(), g_VS.m_pBlob->GetBufferSize(), &ILayOut);
 
   (*pDeviceContext)->IASetInputLayout(ILayOut);
     
@@ -269,6 +274,7 @@ void SetInfoToRender()
   {
     DieVector4D m_Pos;
   };
+  
   Vertex VerToRender[3]
   {
     DieVector4D(0.0f, 0.5f, 0.5f, 0.f),
@@ -290,92 +296,23 @@ void SetInfoToRender()
 
   (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
 
-
-  //Index Buffer
-  struct INDEX
-  {
-    UINT m_Pos;
-
-  };
-
-  INDEX IndexToRender[3]
-  {
-    1,2,3
-  };
-
-
-  D3D11_BUFFER_DESC DesIndBuffer;
-  DesIndBuffer.BindFlags = D3D11_BIND_INDEX_BUFFER;
-  DesIndBuffer.ByteWidth = sizeof(INDEX) * 3; //Tamaño buffer  
-  DesIndBuffer.CPUAccessFlags = 0;
-  DesIndBuffer.MiscFlags = 0;
-  DesIndBuffer.Usage = D3D11_USAGE_DEFAULT;
-
-  D3D11_SUBRESOURCE_DATA mInitData;
-  ZeroMemory(&mInitData, sizeof(mInitData));
-  mInitData.pSysMem = IndexToRender;
-
-  (*pDevice)->CreateBuffer(&DesIndBuffer, &mInitData, &pIndexB);
-
+  g_IndexBuffer.Add(1);
+  g_IndexBuffer.Add(2);
+  g_IndexBuffer.Add(3);
+  g_IndexBuffer.CreateHardwareBuffer();
+  g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
 
   UINT stride = sizeof(Vertex);
-
   (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
-  (*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
+  //(*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
   (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
  
 }
 
 void createVertexShader()
 {
-  std::string prmFileName;
-  std::string prmEntryPoint;
-  /************************************************************************/
-  std::string fileName = "Resource\\Shaders\\ShaderTest.hlsl";
-  std::fstream myFileStream;
-  myFileStream.open(fileName, std::ios::in | std::ios::out | std::ios::ate);
-  unsigned int fileLeght = myFileStream.tellg();
-  myFileStream.seekg(0, std::ios::beg);
-
-  std::string pBuffer;
-  pBuffer.resize(fileLeght + 1, 0);
-  myFileStream.read(&pBuffer[0], fileLeght);
-
-  myFileStream.close();
-  /************************************************************************/
-
-
-  // Compile the vertex shader
-  HRESULT hr = S_OK;
-
-  DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-#if defined( DEBUG ) || defined( _DEBUG )
-  // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-  // Setting this flag improves the shader debugging experience, but still allows 
-  // the shaders to be optimized and to run exactly the way they will run in 
-  // the release configuration of this program.
-  dwShaderFlags |= D3DCOMPILE_DEBUG;
-#endif
-
-  ID3DBlob* pErrorBlob;
- 
-  ID3D11VertexShader* VertexShader = nullptr;
-  hr = D3DCompile(pBuffer.c_str(), pBuffer.size(), fileName.c_str(), NULL, NULL,
-    "VS", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_ENABLE_STRICTNESS, 0, &pVertexShader, &pErrorBlob);
-  if (FAILED(hr))
-  {
-    if (pErrorBlob != NULL)
-      OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
-    if (pErrorBlob) pErrorBlob->Release();
-  }
-  if (pErrorBlob) pErrorBlob->Release();
-
-  // Create the vertex shader
-  hr = gDie_Device.pDie_Device->CreateVertexShader(pVertexShader->GetBufferPointer(), pVertexShader->GetBufferSize(), NULL, &VertexShader);
-  if (FAILED(hr))
-  {
-    pVertexShader->Release();
-  }
+  g_VS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_VS");
+  g_PS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_PS");
 }
 
 //void cancer()
