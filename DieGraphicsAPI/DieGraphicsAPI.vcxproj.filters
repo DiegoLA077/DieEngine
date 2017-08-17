@@ -42,6 +42,9 @@
     <ClInclude Include="include\DieVertexShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\DieGaphicsAPI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DieDeviceContext.cpp">
@@ -66,6 +69,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DiePixelShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DieGrapicsAPI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

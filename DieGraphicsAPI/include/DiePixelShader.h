@@ -2,7 +2,7 @@
 
 #include "DieShader.h"
 
-class ID3D11PixelShader;
+struct ID3D11PixelShader;
 
 namespace dieEngineSDK
 {

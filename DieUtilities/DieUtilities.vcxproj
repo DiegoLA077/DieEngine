@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DieMatrix4D.h" />
+    <ClInclude Include="include\DieModulo.h" />
     <ClInclude Include="include\DiePlaformMath.h" />
     <ClInclude Include="include\DiePlatformDefine.h" />
     <ClInclude Include="include\DiePlatformTypes.h" />

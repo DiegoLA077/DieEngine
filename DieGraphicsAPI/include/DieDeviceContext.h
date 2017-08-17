@@ -14,7 +14,7 @@ namespace dieEngineSDK {
 
     void Create();
     void Destroy();
-    void* GetObject();
+    void* getObject();
     void** GetReference();
     
   };

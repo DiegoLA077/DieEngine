@@ -26,7 +26,6 @@ DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
 DieRenderTargetView     gDie_RenderTargetView;
 
-typedef dieEngineSDK::DieIndexBuffer<unsigned int> DieIndexBuffer32;
 
 DieIndexBuffer32  g_IndexBuffer;
 
@@ -296,11 +295,11 @@ void SetInfoToRender()
 
   (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
 
-  g_IndexBuffer.Add(1);
-  g_IndexBuffer.Add(2);
-  g_IndexBuffer.Add(3);
-  g_IndexBuffer.CreateHardwareBuffer();
-  g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
+   g_IndexBuffer.Add(1);
+   g_IndexBuffer.Add(2);
+   g_IndexBuffer.Add(3);
+   g_IndexBuffer.CreateHardwareBuffer();
+   g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
 
   UINT stride = sizeof(Vertex);
   (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);

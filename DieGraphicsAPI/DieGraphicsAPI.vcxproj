@@ -175,6 +175,7 @@
     <ClInclude Include="include\DieBufferBase.h" />
     <ClInclude Include="include\DieDevice.h" />
     <ClInclude Include="include\DieDeviceContext.h" />
+    <ClInclude Include="include\DieGaphicsAPI.h" />
     <ClInclude Include="include\DiePixelShader.h" />
     <ClInclude Include="include\DiePrerequisitesGraphics.h" />
     <ClInclude Include="include\DieRenderTargetView.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\DieBufferBase.cpp" />
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
+    <ClCompile Include="src\DieGrapicsAPI.cpp" />
     <ClCompile Include="src\DiePixelShader.cpp" />
     <ClCompile Include="src\DieRenderTargetView.cpp" />
     <ClCompile Include="src\DieShader.cpp" />

@@ -23,7 +23,7 @@ void dieEngineSDK::DieDeviceContext::Destroy()
   }
 }
 
-void* dieEngineSDK::DieDeviceContext::GetObject()
+void* dieEngineSDK::DieDeviceContext::getObject()
 {
   return reinterpret_cast<void*>(pDie_DeviceContext);
 }
