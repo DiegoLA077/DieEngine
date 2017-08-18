@@ -311,7 +311,7 @@ void SetInfoToRender()
 void createVertexShader()
 {
   g_VS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_VS");
-  g_PS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_PS");
+  g_PS.Create(&gDie_Device, "Resource\\Shaders\\PixelShader.hlsl", "main_PS");
 }
 
 //void cancer()

@@ -33,8 +33,8 @@ namespace dieEngineSDK {
     ~DieIndexBuffer() {};
 
     void Add(T nIndex) { m_indexArray.push_back(nIndex); }
-  void Add(const std::vector<T>& nIndexArray){ Add(&nIndexArray[0], nIndexArray.size()); }
-  void Add(T* pArray, unsigned int nNumObjects) {
+    void Add(const std::vector<T>& nIndexArray){ Add(&nIndexArray[0], nIndexArray.size()); }
+    void Add(T* pArray, unsigned int nNumObjects) {
     for (unsigned int i = 0; i < nNumObjects; ++i) {
       m_indexArray.push_back(pArray[i]);
     }
@@ -69,12 +69,12 @@ namespace dieEngineSDK {
     indexBufferDesc.StructureByteStride = 0;
     /************************************************************************/
     DieGraphicsAPI* pGraphicsAPI = g_GraphicsAPI().instancePtr();
-    ID3D11Device*pDevice = reinterpret_cast<ID3D11Device*>(pGraphicsAPI->m_Device.GetObject());
+    ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(pGraphicsAPI->m_Device.GetObject());
     D3D11_SUBRESOURCE_DATA scrData;
     scrData.pSysMem = &m_indexArray[0];
     scrData.SysMemPitch = 0;
     scrData.SysMemSlicePitch = 0;
-    HRESULT result = pDevice->CreateBuffer(&indexBufferDesc, &m_indexArray[0], &pDie_BufferBase);
+    HRESULT result = pDevice->CreateBuffer(&indexBufferDesc, &scrData, &pDie_BufferBase);
     if (FAILED(result))
     {
       return; 
