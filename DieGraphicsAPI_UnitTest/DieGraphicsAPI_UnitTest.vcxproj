@@ -101,14 +101,15 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/;&lt;inherit from parent or project defaults&gt;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3dx11.lib;d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPId.lib;DieUtilitiesd.lib;dxguid.lib;d3dcompiler.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)/;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/;&lt;inherit from parent or project defaults&gt;</AdditionalLibraryDirectories>
+      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,14 +119,15 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/;&lt;inherit from parent or project defaults&gt;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)/;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/;&lt;inherit from parent or project defaults&gt;</AdditionalLibraryDirectories>
       <AdditionalDependencies>d3dx11.lib;d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPId.lib;DieUtilitiesd.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

@@ -9,7 +9,7 @@ namespace dieEngineSDK {
   using std::ifstream; 
   using std::ios;
 
-  void DieShader::Compile(String fileName, String entryPoint, String targetStr)
+  void DieShader::Compile(const String& fileName, const String& entryPoint, const String& targetStr)
   {
     ID3DBlob* pErrorBlob = nullptr;
 
@@ -21,6 +21,11 @@ namespace dieEngineSDK {
     //Carga el código del archivo especificado
     ifstream myFileShaderStream;
     myFileShaderStream.open(fileName, ios::in | ios::ate);
+    if (!myFileShaderStream.is_open())
+    {
+      //Manda el error, el archivo no se abrió
+      return;
+    }
     size_t fileLeghtShader = myFileShaderStream.tellg();
     myFileShaderStream.seekg(0, ios::beg);
     String pFileData(fileLeghtShader+1, '\0');

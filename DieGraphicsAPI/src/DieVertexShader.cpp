@@ -6,7 +6,7 @@
 namespace dieEngineSDK
 {
   
-  void DieVertexShader::Create(DieDevice* pDevice, String fileName, String entryPoint)
+  void DieVertexShader::Create(DieDevice* pDevice, const String& fileName, const String& entryPoint)
   {
     Compile(fileName, entryPoint, "vs_5_0");
 

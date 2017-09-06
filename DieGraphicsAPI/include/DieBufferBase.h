@@ -13,7 +13,7 @@ namespace dieEngineSDK {
     };
   }
 
-  class DIE_GRAPHICS_EXPORT DieBufferBase
+  class DieBufferBase
   {
   public:
     DieBufferBase() {};
@@ -26,7 +26,7 @@ namespace dieEngineSDK {
   };
 
   template<typename T>
-  class DIE_GRAPHICS_EXPORT DieIndexBuffer : public DieBufferBase
+  class DieIndexBuffer : public DieBufferBase
   {
   public:
     DieIndexBuffer() {};
@@ -186,7 +186,7 @@ namespace dieEngineSDK {
     vertexBufferDesc.StructureByteStride = 0;
 
     DieGraphicsAPI* pGraphicsAPI = g_GraphicsAPI().instancePtr();
-    ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(pGraphicsAPI->m_Device.getObject());
+    ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(pGraphicsAPI->m_Device.GetObject());
 
     D3D11_SUBRESOURCE_DATA srData;
     srData.pSysMem = &m_vertexArray[0];
@@ -203,12 +203,13 @@ namespace dieEngineSDK {
   template<typename T>
   void DieVertexBuffer<T>::SetHardwareBuffer(int Slot, int offset)
   {
-    DieGraphicsAPI* pGraphicsAPI = g_GraphicsAPI().instancePtr();
-    ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(pGraphicsAPI->m_DeviceContext.getObject());
+    //DieGraphicsAPI* pGraphicsAPI = g_GraphicsAPI().instancePtr();
+    ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(Slot);
 
     // Set vertex buffer
-    uint32 stride = sizeof(T);
-    pDeviceContext->IASetVertexBuffers(Slot, 1, &pDie_BufferBase, &stride, &offset);
+    UINT stride = sizeof(T);
+    UINT offsetcopy = offset;
+    pDeviceContext->IASetVertexBuffers(Slot, 1, &pDie_BufferBase, &stride, &offsetcopy);
   }
   /************************************************************************/
 

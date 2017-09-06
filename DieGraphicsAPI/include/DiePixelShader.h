@@ -14,7 +14,7 @@ namespace dieEngineSDK
     DiePixelShader() : DieShader(), m_pIPixelShader(nullptr) {}
     ~DiePixelShader() {};
 
-    void Create(DieDevice* pDevice, String fileName, String entryPoint);
+    void Create(DieDevice* pDevice, const String& fileName, const String& entryPoint);
 
     ID3D11PixelShader* m_pIPixelShader;
   };

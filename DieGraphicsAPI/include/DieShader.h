@@ -10,7 +10,7 @@ namespace dieEngineSDK
     DieShader() : m_pBlob(nullptr){};
     virtual ~DieShader() {};
 
-    void Compile(String fileName, String entryPoint, String targetStr);
+    void Compile(const String& fileName, const String& entryPoint, const String& targetStr);
 
     ID3DBlob* m_pBlob;
   };

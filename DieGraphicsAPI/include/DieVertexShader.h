@@ -14,7 +14,7 @@ namespace dieEngineSDK
     DieVertexShader() : DieShader(), m_pIVertexShader(nullptr) {};
     ~DieVertexShader() {};
 
-    void Create(DieDevice* pDevice, String fileName, String entryPoint);
+    void Create(DieDevice* pDevice, const String& fileName, const String& entryPoint);
 
     ID3D11VertexShader* m_pIVertexShader;
   };

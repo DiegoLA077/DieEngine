@@ -26,8 +26,8 @@ DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
 DieRenderTargetView     gDie_RenderTargetView;
 
-
-DieIndexBuffer32  g_IndexBuffer;
+DieVertexBuffer<DIEVERTEX>         g_VertexBuffer;
+DieIndexBuffer32        g_IndexBuffer;
 
 DiePixelShader          g_PS;
 DieVertexShader         g_VS;
@@ -147,11 +147,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
   return 0;
 }
 
-
-ID3D11Device** pDevice = reinterpret_cast<ID3D11Device**> (gDie_Device.GetReference());
-ID3D11DeviceContext** pDeviceContext = reinterpret_cast<ID3D11DeviceContext**> (gDie_DeviceContext.GetReference());
-IDXGISwapChain** pSwapChain = reinterpret_cast<IDXGISwapChain**> (gDie_SwapChain.GetReference());
-ID3D11RenderTargetView** pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView**> (gDie_RenderTargetView.GetReference());
 //--------------------------------------------------------------------------------------
 // Create Direct3D device and swap chain
 //--------------------------------------------------------------------------------------
@@ -199,33 +194,39 @@ HRESULT InitDevice()
   sd.SampleDesc.Quality = 0;
   sd.Windowed = TRUE;
 
-
+  ID3D11Device** ppDevice = reinterpret_cast<ID3D11Device**>(gDie_Device.GetReference());
+  ID3D11DeviceContext** ppDeviceContext = reinterpret_cast<ID3D11DeviceContext**>(gDie_DeviceContext.GetReference());
+  IDXGISwapChain** ppSwapChain = reinterpret_cast<IDXGISwapChain**>(gDie_SwapChain.GetReference());
 
   for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
   {
     g_driverType = driverTypes[driverTypeIndex];
     hr = D3D11CreateDeviceAndSwapChain(NULL, g_driverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
-      D3D11_SDK_VERSION, &sd, pSwapChain, pDevice, &g_featureLevel, pDeviceContext);
+      D3D11_SDK_VERSION, &sd, ppSwapChain, ppDevice, &g_featureLevel, ppDeviceContext);
     if (SUCCEEDED(hr))
       break;
   }
   if (FAILED(hr))
     return hr;
 
+  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
+  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
+  IDXGISwapChain* pSwapChain = reinterpret_cast<IDXGISwapChain*>(gDie_SwapChain.GetObject());
+
   // Create a render target view
   ID3D11Texture2D* pBackBuffer = NULL;
-  hr = (*pSwapChain)->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+  hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
   if (FAILED(hr))
     return hr;
 
   ID3D11RenderTargetView** pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView**> (gDie_RenderTargetView.GetReference());
 
-  hr = (*pDevice)->CreateRenderTargetView(pBackBuffer, NULL, pRenderTargetView);
+  hr = pDevice->CreateRenderTargetView(pBackBuffer, NULL, pRenderTargetView);
   pBackBuffer->Release();
   if (FAILED(hr))
     return hr;
 
-  (*pDeviceContext)->OMSetRenderTargets(1, pRenderTargetView, NULL);
+  pDeviceContext->OMSetRenderTargets(1, pRenderTargetView, NULL);
 
   // Setup the viewport
   D3D11_VIEWPORT vp;
@@ -235,17 +236,12 @@ HRESULT InitDevice()
   vp.MaxDepth = 1.0f;
   vp.TopLeftX = 0;
   vp.TopLeftY = 0;
-  (*pDeviceContext)->RSSetViewports(1, &vp);
+  pDeviceContext->RSSetViewports(1, &vp);
 
   createVertexShader();
 
   return S_OK;
 }
-
-
-ID3D11Buffer* pVertexB;
-ID3D11Buffer* pIndexB;
-ID3D11VertexShader* Vs;
 
 void SetInfoToRender()
 {
@@ -262,56 +258,32 @@ void SetInfoToRender()
   ID3DBlob* pErrorBlob;
   HRESULT hr;
 
+  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
+  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
 
-  (*pDevice)->CreateInputLayout(layout, 0, g_VS.m_pBlob->GetBufferPointer(), g_VS.m_pBlob->GetBufferSize(), &ILayOut);
+  pDevice->CreateInputLayout(layout, 0, g_VS.m_pBlob->GetBufferPointer(), g_VS.m_pBlob->GetBufferSize(), &ILayOut);
 
-  (*pDeviceContext)->IASetInputLayout(ILayOut);
-    
+  pDeviceContext->IASetInputLayout(ILayOut);
+
   //Create VertexBuffer
+  g_VertexBuffer.Add({ DieVector4D(0.0f, 0.5f, 0.5f, 0.f) });
+  g_VertexBuffer.Add({ DieVector4D(0.5f, -0.5f,   0.5f, 0.f) });
+  g_VertexBuffer.Add({ DieVector4D(-0.5f, -0.5f,  0.5f, 0.f) });
+  g_VertexBuffer.CreateHardwareBuffer();
 
-  struct Vertex
-  {
-    DieVector4D m_Pos;
-  };
-  
-  Vertex VerToRender[3]
-  {
-    DieVector4D(0.0f, 0.5f, 0.5f, 0.f),
-    DieVector4D(0.5f, -0.5f,   0.5f, 0.f),
-    DieVector4D(-0.5f, -0.5f,  0.5f, 0.f)
-  };
+  g_IndexBuffer.Add(1);
+  g_IndexBuffer.Add(2);
+  g_IndexBuffer.Add(3);
+  g_IndexBuffer.CreateHardwareBuffer();
 
-
-  D3D11_BUFFER_DESC DesVerBuffer;
-  DesVerBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-  DesVerBuffer.ByteWidth = sizeof(Vertex) * 3; //Tamaño buffer  
-  DesVerBuffer.CPUAccessFlags = 0;
-  DesVerBuffer.MiscFlags = 0;
-  DesVerBuffer.Usage = D3D11_USAGE_DEFAULT;
-
-  D3D11_SUBRESOURCE_DATA InitData;
-  ZeroMemory(&InitData, sizeof(InitData));
-  InitData.pSysMem = VerToRender;
-
-  (*pDevice)->CreateBuffer(&DesVerBuffer, &InitData, &pVertexB);
-
-   g_IndexBuffer.Add(1);
-   g_IndexBuffer.Add(2);
-   g_IndexBuffer.Add(3);
-   g_IndexBuffer.CreateHardwareBuffer();
-   g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
-
-  UINT stride = sizeof(Vertex);
-  (*pDeviceContext)->IASetVertexBuffers(0, 1, &pVertexB, &stride, 0);
-  //(*pDeviceContext)->IASetIndexBuffer(pIndexB, DXGI_FORMAT_R32_UINT, 0);
-  (*pDeviceContext)->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+  pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
  
 }
 
 void createVertexShader()
 {
   g_VS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_VS");
-  g_PS.Create(&gDie_Device, "Resource\\Shaders\\PixelShader.hlsl", "main_PS");
+  g_PS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_PS");
 }
 
 //void cancer()
@@ -351,15 +323,22 @@ void createVertexShader()
 void Render()
 {
   // Just clear the backbuffer
-  float ClearColor[4] = { 0.0f, 255.0f, 255.0f, 1.0f }; //red,green,blue,alpha
+  float ClearColor[4] = { 0.0f, 1.0f, 1.0f, 1.0f }; //red,green,blue,alpha
 
   ID3D11RenderTargetView* pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView*> (gDie_RenderTargetView.GetObject());
+  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
+  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
+  IDXGISwapChain* pSwapChain = reinterpret_cast<IDXGISwapChain*>(gDie_SwapChain.GetObject());
 
-  (*pDeviceContext)->ClearRenderTargetView(pRenderTargetView, ClearColor);
+  pDeviceContext->ClearRenderTargetView(pRenderTargetView, ClearColor);
   
-  (*pDeviceContext)->VSSetShader(Vs, NULL, NULL);
-  (*pDeviceContext)->Draw(3, 0);
-  (*pSwapChain)->Present(0, 0);
+  pDeviceContext->VSSetShader(g_VS.m_pIVertexShader, NULL, NULL);
+  pDeviceContext->PSSetShader(g_PS.m_pIPixelShader, NULL, NULL);
+
+  g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
+  g_VertexBuffer.SetHardwareBuffer();
+  pDeviceContext->Draw(3, 0);
+  pSwapChain->Present(0, 0);
 }
 
 
