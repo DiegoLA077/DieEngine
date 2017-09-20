@@ -1,34 +1,45 @@
 #include "DieDeviceContext.h"
+#include <d3d11.h>
 
-dieEngineSDK::DieDeviceContext::DieDeviceContext()
+namespace dieEngineSDK
 {
-  pDie_DeviceContext = NULL;
-}
-
-dieEngineSDK::DieDeviceContext::~DieDeviceContext()
-{
-  Destroy();
-}
-
-void dieEngineSDK::DieDeviceContext::Create()
-{
-}
-
-void dieEngineSDK::DieDeviceContext::Destroy()
-{
-  if (pDie_DeviceContext != nullptr)
+  struct DeviceContextDX
   {
-    pDie_DeviceContext->Release();
-    pDie_DeviceContext = nullptr;
+    ID3D11DeviceContext* pDie_DeviceContext;
+    void Destroy() { if (pDie_DeviceContext != nullptr)pDie_DeviceContext->Release(); }
+  };
+  DieDeviceContext::DieDeviceContext()
+  {
+    m_DeviceContext = nullptr;
+    m_DeviceContext = new DeviceContextDX();
   }
-}
 
-void* dieEngineSDK::DieDeviceContext::getObject()
-{
-  return reinterpret_cast<void*>(pDie_DeviceContext);
-}
+  DieDeviceContext::~DieDeviceContext()
+  {
+    Destroy();
+  }
 
-void** dieEngineSDK::DieDeviceContext::GetReference()
-{
-  return reinterpret_cast<void**>(&pDie_DeviceContext);
+  void DieDeviceContext::Create()
+  {
+  }
+
+  void DieDeviceContext::Destroy()
+  {
+    if (m_DeviceContext != nullptr)
+    {
+      m_DeviceContext->Destroy();
+      delete m_DeviceContext;
+      m_DeviceContext  = nullptr;
+    }
+  }
+
+  void* DieDeviceContext::GetDeviceContext()
+  {
+    return reinterpret_cast<void*>(m_DeviceContext->pDie_DeviceContext);
+  }
+
+  void** DieDeviceContext::GetReference()
+  {
+    return reinterpret_cast<void**>(&m_DeviceContext->pDie_DeviceContext);
+  }
 }

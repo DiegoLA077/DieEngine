@@ -1,10 +1,19 @@
 #include "DieDevice.h"
+#include <d3d11.h>
+
 
 namespace dieEngineSDK {
 
+  struct DeviceDX
+  {
+    ID3D11Device* pDie_Device;
+    void Destroy() { if (pDie_Device != nullptr) pDie_Device->Release(); };
+  };
+
   DieDevice::DieDevice()
   {
-    pDie_Device = NULL;
+    m_pDevice = nullptr;
+    m_pDevice = new DeviceDX();
   }
 
   DieDevice::~DieDevice()
@@ -18,21 +27,22 @@ namespace dieEngineSDK {
 
   void DieDevice::Destroy()
   {
-    if (pDie_Device != nullptr)
+    if (m_pDevice != nullptr)
     {
-      pDie_Device->Release();
-      pDie_Device = nullptr;
+      m_pDevice->Destroy();
+      delete m_pDevice;
+      m_pDevice = nullptr;
     }
   }
 
-  void* DieDevice::GetObject()
+  void* DieDevice::GetDevice()
   {
-    return reinterpret_cast<void*>(pDie_Device);
+    return reinterpret_cast<void*>(m_pDevice->pDie_Device);
   }
 
   void** DieDevice::GetReference()
   {
-    return reinterpret_cast<void**>(&pDie_Device);
+    return reinterpret_cast<void**>(&m_pDevice->pDie_Device);
   }
 
 }

@@ -1,34 +1,37 @@
 #include "DieSwapChain.h"
 
-dieEngineSDK::DieSwapChain::DieSwapChain()
+namespace dieEngineSDK
 {
-  pDie_SwapChain = NULL;
-}
-
-dieEngineSDK::DieSwapChain::~DieSwapChain()
-{
-  Destroy();
-}
-
-void dieEngineSDK::DieSwapChain::Create()
-{
-}
-
-void dieEngineSDK::DieSwapChain::Destroy()
-{
-  if (pDie_SwapChain != nullptr)
+  DieSwapChain::DieSwapChain()
   {
-    pDie_SwapChain->Release();
-    pDie_SwapChain = nullptr;
+    pDie_SwapChain = NULL;
   }
-}
 
-void* dieEngineSDK::DieSwapChain::GetObject()
-{
-  return reinterpret_cast<void*>(pDie_SwapChain);
-}
+  DieSwapChain::~DieSwapChain()
+  {
+    Destroy();
+  }
 
-void** dieEngineSDK::DieSwapChain::GetReference()
-{
-  return reinterpret_cast<void**>(&pDie_SwapChain);
+  void DieSwapChain::Create()
+  {
+  }
+
+  void DieSwapChain::Destroy()
+  {
+    if (pDie_SwapChain != nullptr)
+    {
+      pDie_SwapChain->Release();
+      pDie_SwapChain = nullptr;
+    }
+  }
+
+  void* DieSwapChain::GetObject()
+  {
+    return reinterpret_cast<void*>(pDie_SwapChain);
+  }
+
+  void** DieSwapChain::GetReference()
+  {
+    return reinterpret_cast<void**>(&pDie_SwapChain);
+  }
 }

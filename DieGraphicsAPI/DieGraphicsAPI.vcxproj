@@ -172,7 +172,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\DieBufferBase.h" />
+    <ClInclude Include="include\DieBufferIndex.h" />
+    <ClInclude Include="include\DieBufferVertex.h" />
     <ClInclude Include="include\DieDevice.h" />
     <ClInclude Include="include\DieDeviceContext.h" />
     <ClInclude Include="include\DieGaphicsAPI.h" />
@@ -182,9 +183,11 @@
     <ClInclude Include="include\DieShader.h" />
     <ClInclude Include="include\DieSwapChain.h" />
     <ClInclude Include="include\DieVertexShader.h" />
+    <ClInclude Include="include\VERTEX.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\DieBufferBase.cpp" />
+    <ClCompile Include="src\DieBufferIndex.cpp" />
+    <ClCompile Include="src\DieBufferVertex.cpp" />
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
     <ClCompile Include="src\DieGrapicsAPI.cpp" />

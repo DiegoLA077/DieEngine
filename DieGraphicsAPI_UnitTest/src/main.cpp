@@ -1,5 +1,7 @@
 #include <Win32/DieMinWindows.h>
 
+#include <d3d11.h>
+
 #include <iostream>
 #include <vector>
 
@@ -10,7 +12,8 @@
 #include <DieRenderTargetView.h>
 #include <DiePixelShader.h>
 #include <DieVertexShader.h>
-#include <DieBufferBase.h>
+#include <DieBufferVertex.h>
+#include <DieBufferIndex.h>
 
 using namespace dieEngineSDK;
 //--------------------------------------------------------------------------------------
@@ -24,10 +27,13 @@ D3D_FEATURE_LEVEL       g_featureLevel = D3D_FEATURE_LEVEL_11_0;
 DieDevice               gDie_Device;
 DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
+
+//TODO Hacer esto con mi estructura input layout y encapsular como es devido.
+ID3D11InputLayout* g_ILayOut;
 DieRenderTargetView     gDie_RenderTargetView;
 
-DieVertexBuffer<DIEVERTEX>         g_VertexBuffer;
-DieIndexBuffer32        g_IndexBuffer;
+DieVertexBuffer        g_VertexBuffer;
+DieIndexBuffer         g_IndexBuffer;
 
 DiePixelShader          g_PS;
 DieVertexShader         g_VS;
@@ -38,6 +44,7 @@ DieVertexShader         g_VS;
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 HRESULT InitDevice();
 void CleanupDevice();
+void SetInfoToRender();
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void Render();
 void createVertexShader();
@@ -72,7 +79,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     }
     else
     {
-      //SetInfoToRender();
       Render();
     }
   }
@@ -88,18 +94,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 //--------------------------------------------------------------------------------------
 HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-  // Register class
-  WNDCLASSEX wcex;
+  //! Registramos ventana
+  //HINSTANCE hInstance = GetModuleHandleA(0);
+  WNDCLASSEXA wcex;
+  memset(&wcex, 0, sizeof(WNDCLASSEXA));
+
   wcex.cbSize = sizeof(WNDCLASSEX);
   wcex.style = CS_HREDRAW | CS_VREDRAW;
   wcex.lpfnWndProc = WndProc;
   wcex.cbClsExtra = 0;
   wcex.cbWndExtra = 0;
-  wcex.hInstance = hInstance;
+  wcex.hInstance = GetModuleHandle(NULL);
   wcex.hIcon = 0;
   wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-  wcex.lpszMenuName = NULL;
+  wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
+  wcex.lpszMenuName = 0;
   wcex.lpszClassName = "TutorialWindowClass";
   wcex.hIconSm = 0;
   if (!RegisterClassEx(&wcex))
@@ -110,12 +119,12 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
   RECT rc = { 0, 0, 1080, 720 };
   AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
   g_hWnd = CreateWindow("TutorialWindowClass", "DieEngine", WS_OVERLAPPEDWINDOW,
-    CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-    NULL);
+    CW_USEDEFAULT, CW_USEDEFAULT,1080, 720, NULL, NULL, hInstance,
+    nullptr);
   if (!g_hWnd)
-    return E_FAIL;
+    return false;//throw exception("Fallo al crear la ventana"); 
 
-  ShowWindow(g_hWnd, nCmdShow);
+  ShowWindow(g_hWnd, SW_SHOW);
 
   return S_OK;
 }
@@ -131,11 +140,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
   switch (message)
   {
-  case WM_PAINT:
-    hdc = BeginPaint(hWnd, &ps);
-    EndPaint(hWnd, &ps);
-    break;
-
+  
   case WM_DESTROY:
     PostQuitMessage(0);
     break;
@@ -188,11 +193,15 @@ HRESULT InitDevice()
   sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
   sd.BufferDesc.RefreshRate.Numerator = 60;
   sd.BufferDesc.RefreshRate.Denominator = 1;
-  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+  sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+  sd.BufferDesc.Scaling = DXGI_MODE_SCALING_STRETCHED;
+  sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_UNORDERED_ACCESS;
   sd.OutputWindow = g_hWnd;
   sd.SampleDesc.Count = 1;
   sd.SampleDesc.Quality = 0;
-  sd.Windowed = TRUE;
+  sd.Windowed = true;
+  sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+  sd.Flags = 0;
 
   ID3D11Device** ppDevice = reinterpret_cast<ID3D11Device**>(gDie_Device.GetReference());
   ID3D11DeviceContext** ppDeviceContext = reinterpret_cast<ID3D11DeviceContext**>(gDie_DeviceContext.GetReference());
@@ -200,6 +209,7 @@ HRESULT InitDevice()
 
   for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
   {
+    //creaamos device , swapchain y deviceContext
     g_driverType = driverTypes[driverTypeIndex];
     hr = D3D11CreateDeviceAndSwapChain(NULL, g_driverType, NULL, createDeviceFlags, featureLevels, numFeatureLevels,
       D3D11_SDK_VERSION, &sd, ppSwapChain, ppDevice, &g_featureLevel, ppDeviceContext);
@@ -209,25 +219,39 @@ HRESULT InitDevice()
   if (FAILED(hr))
     return hr;
 
-  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
-  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
+  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetDevice());
+  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.GetDeviceContext());
   IDXGISwapChain* pSwapChain = reinterpret_cast<IDXGISwapChain*>(gDie_SwapChain.GetObject());
 
   // Create a render target view
-  ID3D11Texture2D* pBackBuffer = NULL;
+  ID3D11Texture2D* pBackBuffer = nullptr;
   hr = pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
   if (FAILED(hr))
     return hr;
 
   ID3D11RenderTargetView** pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView**> (gDie_RenderTargetView.GetReference());
+  SetInfoToRender();
 
   hr = pDevice->CreateRenderTargetView(pBackBuffer, NULL, pRenderTargetView);
   pBackBuffer->Release();
   if (FAILED(hr))
     return hr;
 
-  pDeviceContext->OMSetRenderTargets(1, pRenderTargetView, NULL);
+  //TODO Cambiar de nombre a esta funcion y organizar todo. en funciones.
+  createVertexShader();
 
+
+  D3D11_INPUT_ELEMENT_DESC layout[] =
+  {
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    //vector3 Normal  12 16-28
+    //vector2 texcord 8 
+  };
+
+  ID3DBlob* pErrorBlob;
+  pDevice->CreateInputLayout(layout, 1, g_VS.m_pBlob->GetBufferPointer(), g_VS.m_pBlob->GetBufferSize(), &g_ILayOut);
+
+  pDeviceContext->OMSetRenderTargets(1, pRenderTargetView, NULL);
   // Setup the viewport
   D3D11_VIEWPORT vp;
   vp.Width = (FLOAT)width;
@@ -237,47 +261,39 @@ HRESULT InitDevice()
   vp.TopLeftX = 0;
   vp.TopLeftY = 0;
   pDeviceContext->RSSetViewports(1, &vp);
-
-  createVertexShader();
-
   return S_OK;
 }
 
 void SetInfoToRender()
 {
-  ID3DBlob* MyShaderCompileInfoCode;
 
-  ID3D11InputLayout* ILayOut;
+  std::vector<VERTEX> VectorVertex;
+  VERTEX VertexA;
+  VertexA.m_Pos.x = 0.0f;
+  VertexA.m_Pos.y = 0.5f;
+  VertexA.m_Pos.z = 0.5f;
+  VertexA.m_Pos.w = 1.0f;
+  VectorVertex.push_back(VertexA);
+  VERTEX VertexB;
+  VertexB.m_Pos.x = 0.5f;
+  VertexB.m_Pos.y = -0.5f;
+  VertexB.m_Pos.z = 0.5f;
+  VertexB.m_Pos.w = 1.0f;
+  VectorVertex.push_back(VertexB);
+  VERTEX VertexC;
+  VertexC.m_Pos.x = -0.5f;
+  VertexC.m_Pos.y = -0.5f;
+  VertexC.m_Pos.z = 0.5f;
+  VertexC.m_Pos.w = 1.0f;
+  VectorVertex.push_back(VertexC);  
 
-  D3D11_INPUT_ELEMENT_DESC layout[] =
-  {
-    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-  };
+  g_VertexBuffer.CreateHardwareBuffer(&gDie_Device,VectorVertex);
 
-
-  ID3DBlob* pErrorBlob;
-  HRESULT hr;
-
-  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
-  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
-
-  pDevice->CreateInputLayout(layout, 0, g_VS.m_pBlob->GetBufferPointer(), g_VS.m_pBlob->GetBufferSize(), &ILayOut);
-
-  pDeviceContext->IASetInputLayout(ILayOut);
-
-  //Create VertexBuffer
-  g_VertexBuffer.Add({ DieVector4D(0.0f, 0.5f, 0.5f, 0.f) });
-  g_VertexBuffer.Add({ DieVector4D(0.5f, -0.5f,   0.5f, 0.f) });
-  g_VertexBuffer.Add({ DieVector4D(-0.5f, -0.5f,  0.5f, 0.f) });
-  g_VertexBuffer.CreateHardwareBuffer();
-
-  g_IndexBuffer.Add(1);
-  g_IndexBuffer.Add(2);
-  g_IndexBuffer.Add(3);
-  g_IndexBuffer.CreateHardwareBuffer();
-
-  pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
- 
+  unsigned int  VectorIndices[3];
+  VectorIndices[0] = 0;
+  VectorIndices[1] = 1;
+  VectorIndices[2] = 2;
+  g_IndexBuffer.CreateHardwareBuffer(&gDie_Device, VectorIndices);
 }
 
 void createVertexShader()
@@ -326,19 +342,21 @@ void Render()
   float ClearColor[4] = { 0.0f, 1.0f, 1.0f, 1.0f }; //red,green,blue,alpha
 
   ID3D11RenderTargetView* pRenderTargetView = reinterpret_cast<ID3D11RenderTargetView*> (gDie_RenderTargetView.GetObject());
-  ID3D11Device* pDevice = reinterpret_cast<ID3D11Device*>(gDie_Device.GetObject());
-  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.getObject());
+  ID3D11DeviceContext* pDeviceContext = reinterpret_cast<ID3D11DeviceContext*>(gDie_DeviceContext.GetDeviceContext());
   IDXGISwapChain* pSwapChain = reinterpret_cast<IDXGISwapChain*>(gDie_SwapChain.GetObject());
 
   pDeviceContext->ClearRenderTargetView(pRenderTargetView, ClearColor);
   
+  g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext);
+  g_VertexBuffer.SetHardwareBuffer(&gDie_DeviceContext);
+
+  pDeviceContext->IASetInputLayout(g_ILayOut);
+  pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   pDeviceContext->VSSetShader(g_VS.m_pIVertexShader, NULL, NULL);
   pDeviceContext->PSSetShader(g_PS.m_pIPixelShader, NULL, NULL);
 
-  g_IndexBuffer.SetHardwareBuffer(&gDie_DeviceContext, 0);
-  g_VertexBuffer.SetHardwareBuffer();
-  pDeviceContext->Draw(3, 0);
-  pSwapChain->Present(0, 0);
+  pDeviceContext->DrawIndexed(3, 0, 0);
+  pSwapChain->Present(1, 0);
 }
 
 

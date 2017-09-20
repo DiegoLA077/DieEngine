@@ -4,17 +4,19 @@
 
 namespace dieEngineSDK {
 
+  struct DeviceContextDX;
   class DIE_GRAPHICS_EXPORT DieDeviceContext
   {
-  private:
-    ID3D11DeviceContext* pDie_DeviceContext;
+  public:
+    DeviceContextDX* m_DeviceContext;
+    
   public:
     DieDeviceContext();
     ~DieDeviceContext();
 
     void Create();
     void Destroy();
-    void* getObject();
+    void* GetDeviceContext();
     void** GetReference();
     
   };

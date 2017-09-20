@@ -1,20 +1,15 @@
 #pragma once
-
 #include "DieShader.h"
-
-struct ID3D11PixelShader;
 
 namespace dieEngineSDK
 {
-  class DieDevice;
-
   class DIE_GRAPHICS_EXPORT DiePixelShader : public DieShader
   {
   public:
     DiePixelShader() : DieShader(), m_pIPixelShader(nullptr) {}
-    ~DiePixelShader() {};
+    virtual~DiePixelShader() {}
 
-    void Create(DieDevice* pDevice, const String& fileName, const String& entryPoint);
+    void Create(DieDevice* Device, const String& fileName, const String& entryPoint);
 
     ID3D11PixelShader* m_pIPixelShader;
   };

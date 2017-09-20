@@ -1,7 +1,10 @@
 #pragma once
 
 #include "DiePrerequisitesGraphics.h"
-
+#include "DieDevice.h"
+#include <d3dcompiler.h>
+#include <d3d11.h>
+//TODO: Cambiar include a cpp y hacer encapsulacion
 namespace dieEngineSDK
 {
   class DIE_GRAPHICS_EXPORT DieShader
