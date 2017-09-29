@@ -1,6 +1,7 @@
 #pragma once
 #include <DiePrerequisites.h>
-
+#include "DiePlatformDefine.h"
+#include "DiePlatformTypes.h"
 
 #if defined(DIE_GRAPHICS_STATIC_LIB)
 #define DIE_GRAPHICS_EXPORT

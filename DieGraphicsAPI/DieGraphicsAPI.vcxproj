@@ -172,6 +172,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DieInputLayout.h" />
     <ClInclude Include="include\DieBufferIndex.h" />
     <ClInclude Include="include\DieBufferVertex.h" />
     <ClInclude Include="include\DieDevice.h" />
@@ -186,6 +187,7 @@
     <ClInclude Include="include\VERTEX.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DieInputLayout.cpp" />
     <ClCompile Include="src\DieBufferIndex.cpp" />
     <ClCompile Include="src\DieBufferVertex.cpp" />
     <ClCompile Include="src\DieDevice.cpp" />
