@@ -83,6 +83,7 @@
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Configuration)/$(PlatformTarget)/</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
+    <ExecutablePath>C:\Development\assimp-master\include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,6 +94,7 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Configuration)/$(PlatformTarget)/</IntDir>
+    <ExecutablePath>C:\Development\assimp-master\include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -119,14 +121,14 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/;&lt;inherit from parent or project defaults&gt;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/;C:\Development\assimp-master\include\;&lt;inherit from parent or project defaults&gt;;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/;&lt;inherit from parent or project defaults&gt;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3dx11.lib;d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPId.lib;DieUtilitiesd.lib;d3dcompiler.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;dxguid.lib;winmm.lib;comctl32.lib;gtestd.lib;gtest_maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)\;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/;$(DEVLIBS)assimp-master\lib\$(PlatformTarget)\;&lt;inherit from parent or project defaults&gt;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3dx11.lib;d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPId.lib;DieUtilitiesd.lib;d3dx11d.lib;d3dx9d.lib;dxerr.lib;winmm.lib;comctl32.lib;gtestd.lib;gtest_maind.lib;assimpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -160,7 +162,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieGraphicsAPI/include/;$(SolutionDir)DieUtilities/include/;$(DXSDK_DIR)include/;C:\Development\googletest/include/;C:\Development\assimp-master\include\</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -168,8 +170,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPI.lib;DieCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)/;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;d3dcompiler.lib;DieGraphicsAPI.lib;DieCore.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)/;$(DXSDK_DIR)lib/$(PlatformTarget)/;$(DEVLIBS)googletest/lib/$(PlatformTarget)/;$(DEVLIBS)assimp-master\lib\$(PlatformTarget)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

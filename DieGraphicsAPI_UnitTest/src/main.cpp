@@ -14,6 +14,8 @@
 #include <DieVertexShader.h>
 #include <DieBufferVertex.h>
 #include <DieBufferIndex.h>
+#include <DieModel.h>
+
 
 using namespace dieEngineSDK;
 //--------------------------------------------------------------------------------------
@@ -29,14 +31,17 @@ DieDeviceContext        gDie_DeviceContext;
 DieSwapChain            gDie_SwapChain;
 
 //TODO Hacer esto con mi estructura input layout y encapsular como es devido.
-ID3D11InputLayout* g_ILayOut;
+ID3D11InputLayout*      g_ILayOut;
 DieRenderTargetView     gDie_RenderTargetView;
 
-DieVertexBuffer        g_VertexBuffer;
-DieIndexBuffer         g_IndexBuffer;
+DieVertexBuffer         g_VertexBuffer;
+DieIndexBuffer          g_IndexBuffer;
 
 DiePixelShader          g_PS;
 DieVertexShader         g_VS;
+
+DieModel                g_Model;
+
 
 //--------------------------------------------------------------------------------------
 // Forward declarations
@@ -266,72 +271,40 @@ HRESULT InitDevice()
 
 void SetInfoToRender()
 {
-
   std::vector<VERTEX> VectorVertex;
-  VERTEX VertexA;
-  VertexA.m_Pos.x = 0.0f;
-  VertexA.m_Pos.y = 0.5f;
-  VertexA.m_Pos.z = 0.5f;
-  VertexA.m_Pos.w = 1.0f;
-  VectorVertex.push_back(VertexA);
-  VERTEX VertexB;
-  VertexB.m_Pos.x = 0.5f;
-  VertexB.m_Pos.y = -0.5f;
-  VertexB.m_Pos.z = 0.5f;
-  VertexB.m_Pos.w = 1.0f;
-  VectorVertex.push_back(VertexB);
-  VERTEX VertexC;
-  VertexC.m_Pos.x = -0.5f;
-  VertexC.m_Pos.y = -0.5f;
-  VertexC.m_Pos.z = 0.5f;
-  VertexC.m_Pos.w = 1.0f;
-  VectorVertex.push_back(VertexC);  
+   VERTEX VertexA;
+   VertexA.m_Pos.x = 0.0f;
+   VertexA.m_Pos.y = 0.5f;
+   VertexA.m_Pos.z = 0.5f;
+   VertexA.m_Pos.w = 1.0f;
+   VectorVertex.push_back(VertexA);
+   VERTEX VertexB;
+   VertexB.m_Pos.x = 0.5f;
+   VertexB.m_Pos.y = -0.5f;
+   VertexB.m_Pos.z = 0.5f;
+   VertexB.m_Pos.w = 1.0f;
+   VectorVertex.push_back(VertexB);
+   VERTEX VertexC;
+   VertexC.m_Pos.x = -0.5f;
+   VertexC.m_Pos.y = -0.5f;
+   VertexC.m_Pos.z = 0.5f;
+   VertexC.m_Pos.w = 1.0f;
+   VectorVertex.push_back(VertexC);
+   g_VertexBuffer.CreateHardwareBuffer(&gDie_Device,VectorVertex);
 
-  g_VertexBuffer.CreateHardwareBuffer(&gDie_Device,VectorVertex);
-
-  unsigned int  VectorIndices[3];
-  VectorIndices[0] = 0;
-  VectorIndices[1] = 1;
-  VectorIndices[2] = 2;
-  g_IndexBuffer.CreateHardwareBuffer(&gDie_Device, VectorIndices);
+   unsigned int  VectorIndices[3];
+    VectorIndices[0] = 0;
+    VectorIndices[1] = 1;
+    VectorIndices[2] = 2;
+    g_IndexBuffer.CreateHardwareBuffer(&gDie_Device, VectorIndices);
 }
 
 void createVertexShader()
 {
   g_VS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_VS");
   g_PS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_PS");
+  g_Model.loadModel("Resource\\Models\\Hebe.3ds");
 }
-
-//void cancer()
-//{
-//  std::string fileName = "ShaderTest.hlsl";
-//  std::ifstream myFileStream(fileName, std::ios::binary & std::ios::ate);
-//
-//  if (!myFileStream.is_open())
-//  {
-//    std::cout << "Cancer";
-//
-//    return;
-//  }
-//
-//  unsigned int fileLeght = myFileStream.tellg();
-//  myFileStream.seekg(std::fstream::beg);
-//
-//  std::vector<char> pBuffer(fileLeght);
-//  myFileStream.read(&pBuffer[0], fileLeght);
-//
-//  std::string myfileContent;
-//  myfileContent.reserve(fileLeght);
-//  myfileContent.insert(myfileContent.begin(), pBuffer.begin(), pBuffer.end());
-//
-//  std::cout << "El Archivo pesa: " << fileLeght << " bytes" << std::endl;
-//  std::cout << "GG" << std::endl;
-//
-//  std::ofstream fileOut("exitFile.txt", std::ios::binary);
-//  fileOut.write(reinterpret_cast<char*> (&myfileContent), sizeof(myfileContent));
-//  fileOut.close();
-//
-//}
 
 //--------------------------------------------------------------------------------------
 // Render the frame
@@ -355,6 +328,8 @@ void Render()
   pDeviceContext->VSSetShader(g_VS.m_pIVertexShader, NULL, NULL);
   pDeviceContext->PSSetShader(g_PS.m_pIPixelShader, NULL, NULL);
 
+
+
   pDeviceContext->DrawIndexed(3, 0, 0);
   pSwapChain->Present(1, 0);
 }
@@ -372,3 +347,4 @@ void CleanupDevice()
   //if (g_pImmediateContext) g_pImmediateContext->Release();
   //if (g_pd3dDevice) g_pd3dDevice->Release();
 }
+

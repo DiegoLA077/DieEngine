@@ -80,6 +80,7 @@
     <OutDir>$(SolutionDir)bin/$(PlatformTarget)/</OutDir>
     <IntDir>$(SolutionDir)intermediate/$(ProjectName)/$(Configuration)/$(PlatformTarget)/</IntDir>
     <TargetName>$(ProjectName)d</TargetName>
+    <ExecutablePath>C:\Development\assimp-master\include\;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -116,15 +117,15 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>DIE_GRAPHICS_EXPORTS;</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>./include/;$(SolutionDir)DieUtilities/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./include/;C:\Development\assimp-master\include\;$(SolutionDir)DieUtilities/include/</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <FullProgramDatabaseFile>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).pdb</FullProgramDatabaseFile>
       <ImportLibrary>$(SolutionDir)lib/$(PlatformTarget)/$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>d3d11.lib;dxguid.lib;d3dcompiler.lib;DieUtilitiesd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxguid.lib;d3dcompiler.lib;DieUtilitiesd.lib;assimpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)lib\$(PlatformTarget);$(DEVLIBS)assimp-master\lib\$(PlatformTarget)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -178,6 +179,8 @@
     <ClInclude Include="include\DieDevice.h" />
     <ClInclude Include="include\DieDeviceContext.h" />
     <ClInclude Include="include\DieGaphicsAPI.h" />
+    <ClInclude Include="include\DieMesh.h" />
+    <ClInclude Include="include\DieModel.h" />
     <ClInclude Include="include\DiePixelShader.h" />
     <ClInclude Include="include\DiePrerequisitesGraphics.h" />
     <ClInclude Include="include\DieRenderTargetView.h" />
@@ -193,6 +196,8 @@
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
     <ClCompile Include="src\DieGrapicsAPI.cpp" />
+    <ClCompile Include="src\DieMesh.cpp" />
+    <ClCompile Include="src\DieModel.cpp" />
     <ClCompile Include="src\DiePixelShader.cpp" />
     <ClCompile Include="src\DieRenderTargetView.cpp" />
     <ClCompile Include="src\DieShader.cpp" />

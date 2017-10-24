@@ -6,26 +6,54 @@
 
 namespace dieEngineSDK {
     class DIE_CORE_EXPORT DieAplicationBase {
-      //constructor / destructor
+  
      public:
+       /**
+       * @brief Constructor DieAplicationBase :  Aplicacion Base.
+       */
       DieAplicationBase();
+
+      /**
+      * @brief Destrctor DieAplicationBas : Aplicacion Base.
+      */
       virtual ~DieAplicationBase();
 
-      //Funciones
      public:
+
+       /**
+       * @brief Funcion run: corre todo el programa.
+       * @return entero : 
+       */
       int run();
 
-      //Accesores
+      /**
+      * @brief Funcion getScreenHandle : 
+      * @return entero : handle de la pantalla.
+      */
       int gerScreenHandle() { return m_screenHadle; }
 
-      //Variables
      protected:
+
+       /**
+       * @brief Variable m_iScrWid : Largo de la ventana 
+       */
       int m_iScrWidth;
+
+      /**
+      * @brief Variable m_iScrHeight : Ancho de la ventana
+      */
       int m_iScrHeight;
 
-      String m_szTitle; //Titulo de la ventana
+      /**
+      * @brief Cadena m_szTitle : Titulo de la ventana
+      */
+      String m_szTitle; 
 
      protected:
+
+       /**
+       * @brief Variable m_screenHandle : Handle de la ventana
+       */
        int m_screenHadle;
     };
 }

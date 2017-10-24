@@ -8,36 +8,42 @@ namespace dieEngineSDK
   class DIE_GRAPHICS_EXPORT DieIndexBuffer
   {
   public:
+
+    /**
+    *	@brief Constructor IndexBuffer.
+    */
     DieIndexBuffer();
+
+    /**
+    *	@brief Destructor IndexBuffer destruye el buffer.
+    */
     ~DieIndexBuffer() { Destroy(); };
 
+  public:
+    /**
+    *	@brief Variable contiene buffer de indices.
+    */
     BufferDX* m_pIndexBuffer;
 
-    /*void Add( nIndex) { m_indexArray.push_back(nIndex); }
-    void Add(const std::vector<T>& nIndexArray) { Add(&nIndexArray[0], nIndexArray.size()); }
-    void Add(T* pArray, unsigned int nNumObjects) {
-      for (unsigned int i = 0; i < nNumObjects; ++i) {
-        m_indexArray.push_back(pArray[i]);
-      }
-    }*/
-    //
-    //void Remove(unsigned int nIndex, unsigned int count = 1) {
-    //  m_indexArray.erase(m_indexArray.begin() + nIndex,
-    //    (m_indexArray.begin() + nIndex) + (count - 1));
-    //}
-    //
-    //void Clear() { m_indexArray.clear(); }
-    
-    void Destroy();
+  public:
     /**
-     *	@brief Funcion para crear un buffer.
+    *	@brief Funcion para destruir el buffer.
+    *	@return void.
+    */    
+    void Destroy();
+
+    /**
+     *	@brief Funcion CreateBuffer: crea un buffer de indices.
      *	@param DieDevice Device: Dispositivo de hardware a utilizar.
      *  @param std::vector<unsigned int>& Index: Indices.
+     *  @return void.
      */
     void CreateHardwareBuffer(DieDevice* pDevice, unsigned int* Index);
+    
     /**
-     *	@brief Funcion para setear un buffer.
+     *	@brief Funcion SetBuffer: setea un buffer de indices.
      *	@param void* pDeviceContext: DeviceContext para setear el buffer constante.
+     *  @return void.
      */
     void SetHardwareBuffer(DieDeviceContext* pDeviceContext);
 
