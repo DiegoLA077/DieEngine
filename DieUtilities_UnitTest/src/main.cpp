@@ -4,8 +4,9 @@
 #include <DieVector4D.h>
 
 using namespace dieEngineSDK;
-
-TEST(Diego, Constantes) {
+#define  GTEST_OUTPUT 
+//TEST(Diego, Constantes) {
+TEST(Diego, CreateHardwareBufferVertex) {
   DiePlatformMath Consts;
   ASSERT_TRUE(Consts.PI == 3.141592654f);
   ASSERT_TRUE(Consts.INVPI == 0.3183098862f);
@@ -13,9 +14,12 @@ TEST(Diego, Constantes) {
   ASSERT_TRUE(Consts.EPSILON == 0.0000000000085418781f);
   ASSERT_TRUE(Consts.DELTA == 0.00001f);
   ASSERT_TRUE(Consts.EULER == 2.71828182845904523536f);
+  GTEST_OUTPUT "xml:C:\DieEngine";
+  system("pause");
 }
 
-TEST(Diego, Trigonometria) {
+//TEST(Diego, Trigonometria) {
+TEST(Diego, SetHardwareBufferVertex) {
   DiePlatformMath Trig;
   ASSERT_TRUE(Trig.Sin(90.0f) == 0.8939966636f);
   ASSERT_TRUE(Trig.Cos(45.0f) == 0.5253219888f);
@@ -25,7 +29,8 @@ TEST(Diego, Trigonometria) {
   ASSERT_TRUE(Trig.Atan(1) == 0.78539816f);
 }
 
-TEST(Diego, Operaciones) {
+//TEST(Diego, Operaciones) {
+TEST(Diego, CreateHardwareBufferIndex) {
   DiePlatformMath math;
   ASSERT_TRUE(math.Sqrt(9) == 3);
   ASSERT_TRUE(math.InverseSqrt(2) == 0.7071067812f);
@@ -39,9 +44,11 @@ TEST(Diego, Operaciones) {
   ASSERT_TRUE(math.Ceil(7.2) == 8);
   ASSERT_TRUE(math.Floor(3.5) == 3);
   ASSERT_TRUE(math.Round(4.7) == 5);
+  system("pause");
 }
 
-TEST(Diego, Matrizes) {
+//TEST(Diego, Matrizes) {
+TEST(Diego, SetHardwareBufferIndex) {
   DieMatrix4D Matriz;
   Matriz.m_Elements.m00 = 1; Matriz.m_Elements.m10 = 5; Matriz.m_Elements.m20 = 9;  Matriz.m_Elements.m30 = 0;
   Matriz.m_Elements.m01 = 2; Matriz.m_Elements.m11 = 6; Matriz.m_Elements.m21 = 10; Matriz.m_Elements.m31 = 0;
@@ -62,9 +69,11 @@ TEST(Diego, Matrizes) {
 
  
   //ASSERT_TRUE(Matriz == Matriz2);
-
+  system("pause");
+  system("pause");
 }
 
+//TEST(Diego, Vectores) {
 TEST(Diego, Vectores) {
   DieVector4D Vector;
   Vector.x = 5;
@@ -105,7 +114,7 @@ TEST(Diego, Vectores) {
   Vector03.z = 38;
   Vector03.w = 0;
   ASSERT_TRUE(Vector == Vector03);
-
+  system("pause");
 }
 
 //void main() {

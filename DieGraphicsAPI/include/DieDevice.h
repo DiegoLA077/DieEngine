@@ -11,40 +11,40 @@ namespace dieEngineSDK {
   public:
 
     /**
-    * @brief Constructor Device.
+    *	@brief Constructor DieDevice.
     */
     DieDevice();
 
     /**
-    * @brief Destructor Device.
+    * @brief Destructor DieDevice.
     */
     ~DieDevice();
 
     /**
-    * @brief Variable contiene el device.
+    * @brief Variable m_pDevice : Contiene el device de Directx.
     */
     DeviceDX* m_pDevice;
 
     /**
-    * @brief Funcion Create: crea un device.
+    * @brief Funcion Create : Crea un device.
     * @return void.
     */
     void Create();
 
     /**
-    * @brief Funcion Destroy: destruye el device.
+    * @brief Funcion Destroy : Destruye el device.
     * @return void.
     */
     void Destroy();
 
     /**
-    * @brief Funcion GetDevice: 
+    * @brief Funcion GetDevice : 
     * @return void puntero.
     */
     void* GetDevice();
 
     /**
-    * @brief Funcion GetReference: 
+    * @brief Funcion GetReference : 
     * @return void puntero puntero.
     */
     void** GetReference();

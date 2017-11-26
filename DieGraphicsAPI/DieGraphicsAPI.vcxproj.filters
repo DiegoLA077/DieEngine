@@ -51,13 +51,13 @@
     <ClInclude Include="include\VERTEX.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DieInputLayout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\DieMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\DieModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DieInputLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,13 +92,13 @@
     <ClCompile Include="src\DieBufferVertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DieInputLayout.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\DieMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\DieModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DieInputLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

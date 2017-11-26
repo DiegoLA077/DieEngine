@@ -9,10 +9,13 @@ namespace dieEngineSDK {
   {
   private:
     IDXGISwapChain* pDie_SwapChain;
+    HWND Die_hWnd = NULL;
+    D3D_FEATURE_LEVEL DiefeatureLevel = D3D_FEATURE_LEVEL_11_0;
   public:
     DieSwapChain();
     ~DieSwapChain();
 
+    //void InitDevice();
     void Create();
     void Destroy();
     void* GetObject();

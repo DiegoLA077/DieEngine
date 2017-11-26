@@ -173,12 +173,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DieInputLayout.h" />
     <ClInclude Include="include\DieBufferIndex.h" />
     <ClInclude Include="include\DieBufferVertex.h" />
     <ClInclude Include="include\DieDevice.h" />
     <ClInclude Include="include\DieDeviceContext.h" />
     <ClInclude Include="include\DieGaphicsAPI.h" />
+    <ClInclude Include="include\DieInputLayout.h" />
     <ClInclude Include="include\DieMesh.h" />
     <ClInclude Include="include\DieModel.h" />
     <ClInclude Include="include\DiePixelShader.h" />
@@ -190,12 +190,12 @@
     <ClInclude Include="include\VERTEX.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DieInputLayout.cpp" />
     <ClCompile Include="src\DieBufferIndex.cpp" />
     <ClCompile Include="src\DieBufferVertex.cpp" />
     <ClCompile Include="src\DieDevice.cpp" />
     <ClCompile Include="src\DieDeviceContext.cpp" />
     <ClCompile Include="src\DieGrapicsAPI.cpp" />
+    <ClCompile Include="src\DieInputLayout.cpp" />
     <ClCompile Include="src\DieMesh.cpp" />
     <ClCompile Include="src\DieModel.cpp" />
     <ClCompile Include="src\DiePixelShader.cpp" />

@@ -72,6 +72,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     return 0;
   }
 
+
+
   // Main message loop
   MSG msg = { 0 };
   while (WM_QUIT != msg.message)
@@ -292,10 +294,10 @@ void SetInfoToRender()
    VectorVertex.push_back(VertexC);
    g_VertexBuffer.CreateHardwareBuffer(&gDie_Device,VectorVertex);
 
-   unsigned int  VectorIndices[3];
-    VectorIndices[0] = 0;
-    VectorIndices[1] = 1;
-    VectorIndices[2] = 2;
+   std::vector<unsigned int> VectorIndices;
+    VectorIndices.push_back(0);
+    VectorIndices.push_back(1);
+    VectorIndices.push_back(2);
     g_IndexBuffer.CreateHardwareBuffer(&gDie_Device, VectorIndices);
 }
 
@@ -303,7 +305,8 @@ void createVertexShader()
 {
   g_VS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_VS");
   g_PS.Create(&gDie_Device, "Resource\\Shaders\\ShaderTest.hlsl", "main_PS");
-  g_Model.loadModel("Resource\\Models\\Hebe.3ds");
+  g_Model.loadModel("Resource\\Models\\Cube.3ds");
+ 
 }
 
 //--------------------------------------------------------------------------------------
@@ -327,9 +330,10 @@ void Render()
   pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
   pDeviceContext->VSSetShader(g_VS.m_pIVertexShader, NULL, NULL);
   pDeviceContext->PSSetShader(g_PS.m_pIPixelShader, NULL, NULL);
-
-
-
+  /**/
+  g_Model.CreateIndexBuffer(&gDie_Device);
+  g_Model.CreateVertexBuffer(&gDie_Device);
+  /**/
   pDeviceContext->DrawIndexed(3, 0, 0);
   pSwapChain->Present(1, 0);
 }
@@ -347,4 +351,3 @@ void CleanupDevice()
   //if (g_pImmediateContext) g_pImmediateContext->Release();
   //if (g_pd3dDevice) g_pd3dDevice->Release();
 }
-

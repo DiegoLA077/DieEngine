@@ -21,13 +21,13 @@ namespace dieEngineSDK
       m_pIndexBuffer = nullptr;
     }
   }
-  void DieIndexBuffer::CreateHardwareBuffer(DieDevice* pDevice,unsigned int* Index)
+  void DieIndexBuffer::CreateHardwareBuffer(DieDevice* pDevice, const std::vector<unsigned int>& Indexes)
   {
     ID3D11Device* pD = reinterpret_cast<ID3D11Device*>(pDevice->GetDevice());
 
     D3D11_BUFFER_DESC indexBufferDesc;
     memset(&indexBufferDesc, 0, sizeof(D3D11_BUFFER_DESC));
-    indexBufferDesc.ByteWidth = sizeof(unsigned int) * 3;
+    indexBufferDesc.ByteWidth = sizeof(unsigned int) * Indexes.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     indexBufferDesc.CPUAccessFlags = 0;
@@ -35,7 +35,7 @@ namespace dieEngineSDK
     indexBufferDesc.StructureByteStride = 0;
     /************************************************************************/
     D3D11_SUBRESOURCE_DATA scrData;
-    scrData.pSysMem = Index;
+    scrData.pSysMem = &Indexes[0];
     scrData.SysMemPitch = 0;
     scrData.SysMemSlicePitch = 0;
     HRESULT result = pD->CreateBuffer(&indexBufferDesc, &scrData, &m_pIndexBuffer->m_IndexBuffer);
